@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Loader Example</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          padding: 20px;
+      }
+  </style>
+</head>
+<body>
+<h1 id="title">The text will grow periodically</h1>
+<p id="content">This is the initial text that loads with the page.</p>
+
+<script>
+  const lorem = "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium\n";
+  document.addEventListener("DOMContentLoaded", () => {
+    const content = document.getElementById("content");
+    const additionalText = lorem.repeat(10);
+    const randomInterval = () => Math.floor(Math.random() * (2000 - 1000 + 1)) + 1000;
+
+    let times = 0;
+    const intervalId = setInterval(() => {
+      if (times < 3) {
+        content.innerHTML += additionalText;
+        times++;
+      } else {
+        clearInterval(intervalId);
+      }
+    }, randomInterval());
+  });
+</script>
+</body>
+</html>

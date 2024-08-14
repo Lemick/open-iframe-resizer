@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iframe Resize Example</title>
+  <style>
+      iframe {
+          border: 2px dotted red;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="item">Iframe 1</div>
+  <div class="item">Iframe 2</div>
+  <div class="item">
+    <iframe src="iframe-content.html"></iframe>
+  </div>
+  <div class="item">
+    <iframe src="iframe-content.html"></iframe>
+  </div>
+</div>
+
+</body>
+<style>
+    .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 20px 1fr;
+        gap: 10px;
+        width: 100%;
+        height: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .item {
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+
+    iframe {
+        width: 100%;
+    }
+</style>
+
+<script type="module">
+  import { initialize } from "/dist/index.js";
+
+  initialize();
+</script>
+</html>

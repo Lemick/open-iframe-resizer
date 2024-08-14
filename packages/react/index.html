@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React in HTML</title>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script src="./dist/open-iframe-resizer-react.umd.js"></script>
+<script type="module">
+  import React from "react";
+  import { createRoot } from "react-dom/client";
+  import { IframeResizer } from "./dist/open-iframe-resizer-react.es";
+
+  function App() {
+    const [mounted, setMounted] = React.useState(false);
+
+    const toggleIframe = function () {
+      setMounted(!mounted);
+    };
+
+    return React.createElement(
+      'div',
+      null,
+      React.createElement(
+        'button',
+        { onClick: toggleIframe },
+        mounted ? 'Unmount Iframe' : 'Mount Iframe'
+      ),
+      mounted &&
+      React.createElement(IframeResizer, {
+        src: '/index-iframe-example.html',
+        style: { width: '100%' },
+      })
+    );
+  }
+
+  const domNode = document.getElementById("root");
+  const root = createRoot(domNode);
+  root.render(React.createElement(App, {}));
+</script>
+</body>
+</html>

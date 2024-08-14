@@ -1,0 +1,31 @@
+{
+  "name": "open-iframe-resizer",
+  "private": true,
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "dev": "npm run dev --workspaces",
+    "test": "npm run test --workspaces"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.8.3",
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "@playwright/test": "^1.46.0",
+    "@types/node": "^20.12.12",
+    "@vitest/coverage-v8": "^2.0.5",
+    "@vitest/ui": "^2.0.5",
+    "concurrently": "^8.2.2",
+    "jsdom": "^24.1.1",
+    "rollup-plugin-visualizer": "^5.12.0",
+    "tslib": "^2.4.0",
+    "typedoc": "^0.26.5",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.0",
+    "vite-plugin-dts": "^4.0.2",
+    "vite-plugin-progress": "^0.0.7",
+    "vitest": "^2.0.5"
+  },
+  "workspaces": [
+    "packages/core", "packages/react"
+  ]
+}

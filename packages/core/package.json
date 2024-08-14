@@ -1,0 +1,40 @@
+{
+	"name": "@open-iframe-resizer/core",
+	"private": false,
+	"version": "1.0.0",
+	"description": "An open iframe resizer library",
+	"license": "MIT",
+	"keywords": ["iframe-resizer", "iframe", "resize"],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Lemick/open-iframe-resizer"
+	},
+	"type": "module",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"typings": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"files": ["dist"],
+	"scripts": {
+		"docs": "npm run typedoc",
+		"lint": "biome lint ./src",
+		"build": "tsc && npm run lint && vite build && typedoc",
+		"build:watch": "vite build --watch && typedoc",
+		"build:usecases-html": "node scripts/generate-use-cases-html.js",
+		"dev": "concurrently \"vite build --watch\" \"npm run serve\"",
+		"serve": "concurrently \"vite --port 5550\" \"vite --port 5551\"",
+		"test": "npm run test:unit && npm run test:e2e",
+		"test:e2e": "npx playwright install --with-deps && playwright test",
+		"test:unit": "vitest run"
+	},
+	"devDependencies": {
+		"@microsoft/tsdoc": "^0.14.1",
+		"picocolors": "^1.0.1"
+	}
+}

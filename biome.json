@@ -1,0 +1,26 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+	"extends": ["../../biome.json"],
+	"organizeImports": {
+		"enabled": true
+	},
+	"formatter": {
+		"indentWidth": 2,
+		"lineWidth": 160
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"suspicious": {
+				"noConsoleLog": "error"
+			},
+			"complexity": {
+				"noForEach": "off"
+			}
+		}
+	},
+	"files": {
+		"ignore": []
+	}
+}
