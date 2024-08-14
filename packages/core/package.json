@@ -30,7 +30,7 @@
 		"dev": "concurrently \"vite build --watch\" \"npm run serve\"",
 		"serve": "concurrently \"vite --port 5550\" \"vite --port 5551\"",
 		"test": "npm run test:unit && npm run test:e2e",
-		"test:e2e": "npx playwright install --with-deps && playwright test",
+		"test:e2e": "npx playwright install --with-deps && npx playwright test",
 		"test:unit": "vitest run"
 	},
 	"devDependencies": {
