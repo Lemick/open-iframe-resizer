@@ -3,7 +3,7 @@ import { visualizer } from "rollup-plugin-visualizer";
 import { type PluginOption, defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 
-export default defineConfig({
+export default defineConfig((env) => ({
 	plugins: [
 		visualizer() as PluginOption,
 		dts({
@@ -21,8 +21,8 @@ export default defineConfig({
 		],
 	},
 	build: {
-		minify: true,
-		sourcemap: true,
+		minify: "esbuild",
+		sourcemap: env.command === "serve",
 		reportCompressedSize: true,
 		lib: {
 			name: "iframeResizer",
@@ -31,4 +31,4 @@ export default defineConfig({
 			formats: ["es", "umd"],
 		},
 	},
-});
+}));

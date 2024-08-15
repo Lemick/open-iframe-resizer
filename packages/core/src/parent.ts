@@ -1,4 +1,4 @@
-import { debounce, getDefaultSettings, isHtmlIframeElement, isIframeSameOrigin } from "~/common";
+import { deferWhenIframeIsLoaded, getDefaultSettings, isHtmlIframeElement, isIframeSameOrigin } from "~/common";
 import type { IframeResizeEvent, InitializeFunction, Settings } from "./type";
 
 const resizeObserver = createResizeObserver();
@@ -72,8 +72,8 @@ function addCrossOriginChildResizeListener(iframe: HTMLIFrameElement, settings: 
 		const isOriginValid = !settings.checkOrigin || allowedOrigins.includes(event.origin);
 
 		if (isOriginValid && event.data?.type === "iframe-resized" && iframe.contentWindow === event.source) {
-			const { width, height } = (event as IframeResizeEvent).data;
-			updateIframeDimensions({ width, height, iframe, settings });
+			const { height } = (event as IframeResizeEvent).data;
+			updateIframeDimensions({ height, iframe, settings });
 		}
 	};
 
@@ -85,7 +85,6 @@ function addCrossOriginChildResizeListener(iframe: HTMLIFrameElement, settings: 
 function addSameOriginChildResizeListener(iframe: HTMLIFrameElement) {
 	const startListener = () => {
 		const contentBody = iframe.contentDocument?.body;
-
 		if (!contentBody) {
 			console.error("Unable to observe the iframe content document body");
 			return;
@@ -94,7 +93,7 @@ function addSameOriginChildResizeListener(iframe: HTMLIFrameElement) {
 		resizeObserver.observe(contentBody);
 	};
 
-	iframe.addEventListener("load", startListener);
+	deferWhenIframeIsLoaded(iframe, startListener);
 
 	return () => {
 		if (iframe.contentDocument?.body) {
@@ -113,16 +112,14 @@ function createResizeObserver() {
 		const { iframe, settings } = matchingRegisteredIframe;
 		const { scrollHeight, scrollWidth } = iframe.contentDocument?.documentElement ?? {};
 		if (scrollHeight !== undefined && scrollWidth !== undefined) {
-			updateIframeDimensions({ width: scrollWidth, height: scrollHeight, iframe, settings });
+			updateIframeDimensions({ height: scrollHeight, iframe, settings });
 		}
 	};
 
-	const resizeObserverCallback = debounce<ResizeObserverCallback>((entries) => entries.forEach(handleEntry), 10);
-	return new ResizeObserver(resizeObserverCallback);
+	return new ResizeObserver((entries) => entries.forEach(handleEntry));
 }
 
-function updateIframeDimensions({ width, height, iframe, settings }: { iframe: HTMLIFrameElement; width: number; height: number; settings: Settings }) {
-	iframe.style.width = `${width}px`;
+function updateIframeDimensions({ height, iframe, settings }: { iframe: HTMLIFrameElement; height: number; settings: Settings }) {
 	iframe.style.height = `${height + settings.offsetSize}px`;
 }
 

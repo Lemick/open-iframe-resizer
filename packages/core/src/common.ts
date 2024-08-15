@@ -6,12 +6,12 @@ const isSameOriginIframe = (iframe: HTMLIFrameElement): iframe is HTMLIFrameElem
 
 const isHtmlIframeElement = (element: Element): element is HTMLIFrameElement => element instanceof HTMLIFrameElement;
 
-const deferWhenDomContentIsLoaded = (document: Document, executable: () => void) => {
-	document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", executable) : executable();
-};
-
-const deferWhenPageIsLoaded = (document: Document, executable: () => void) => {
-	document.readyState !== "complete" ? document.addEventListener("load", executable) : executable();
+const deferWhenIframeIsLoaded = (iframe: HTMLIFrameElement, executable: () => void) => {
+	const isLoadingCompleted = iframe.contentWindow?.document.readyState === "complete";
+	const isNotBlankPage = iframe.src !== "about:blank" && iframe.contentWindow?.location.href !== "about:blank"; // Chrome browsers load once with an empty location
+	// biome-ignore lint/suspicious/noConsoleLog: <explanation>
+	console.log("test", isNotBlankPage, isLoadingCompleted);
+	return isNotBlankPage && isLoadingCompleted ? executable() : iframe.addEventListener("load", executable);
 };
 
 const getDefaultSettings: () => Settings = () => ({ offsetSize: 0, checkOrigin: true });
@@ -34,13 +34,4 @@ function debounce<T extends (...args: any[]) => any>(f: T, delay: number) {
 	};
 }
 
-export {
-	isInIframe,
-	isSameOriginIframe,
-	deferWhenDomContentIsLoaded,
-	isHtmlIframeElement,
-	deferWhenPageIsLoaded,
-	isIframeSameOrigin,
-	debounce,
-	getDefaultSettings,
-};
+export { isInIframe, isSameOriginIframe, isHtmlIframeElement, deferWhenIframeIsLoaded, isIframeSameOrigin, debounce, getDefaultSettings };

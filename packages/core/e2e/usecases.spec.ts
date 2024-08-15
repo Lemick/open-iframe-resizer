@@ -43,3 +43,9 @@ test("Should resize iframe from a different-origin with custom allowed origin", 
 
 	await page.waitForFunction(allIframesHasBeenResized);
 });
+
+test("Should resize iframe when the script is initialized after the iframe is loaded", async ({ page }) => {
+	await page.goto("/usecases/08-deferred-initialization/index.html");
+
+	await page.waitForFunction(allIframesHasBeenResized);
+});

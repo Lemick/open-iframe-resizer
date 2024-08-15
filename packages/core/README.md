@@ -17,11 +17,3 @@
 ```
 
 You can found a working example [here](https://codesandbox.io/p/sandbox/open-iframe-resize-browser-m655zt)
-
-## API
-I decided to replicate the API from the well-known iframe-resizer library, as it may facilitate migration to this project (you only need to change the script).
-## Browser support
-
-| Chrome | Safari | Firefox | Opera | IE        |
-|--------|--------|---------|-------|-----------|
-| 64+    | 13.1+  | 69+     | 51+   | 🙅‍♂️ |

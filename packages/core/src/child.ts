@@ -1,4 +1,4 @@
-import { debounce, isInIframe } from "~/common";
+import { isInIframe } from "~/common";
 import type { IframeResizeEventData } from "./type";
 
 if (isInIframe()) {
@@ -7,14 +7,14 @@ if (isInIframe()) {
 
 function initializeChildListener() {
 	window.addEventListener("load", () => {
-		const resizeObserverCallback = debounce<ResizeObserverCallback>(() => {
+		const resizeObserverCallback = () => {
 			const data: IframeResizeEventData = {
 				type: "iframe-resized",
 				width: document.documentElement.scrollWidth,
 				height: document.documentElement.scrollHeight,
 			};
 			window.parent.postMessage(data, "*");
-		}, 10);
+		};
 
 		const resizeObserver = new ResizeObserver(resizeObserverCallback);
 		resizeObserver.observe(document.body);

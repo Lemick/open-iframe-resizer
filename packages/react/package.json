@@ -1,14 +1,17 @@
 {
 	"name": "@open-iframe-resizer/react",
 	"private": false,
-	"version": "1.0.0",
-	"description": "An open React iframe resize library",
+	"version": "1.0.0-rc5",
+	"description": "Open-source modern iframe resizer component",
 	"license": "MIT",
-	"keywords": ["iframe-resizer", "iframe", "resize"],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Lemick/open-iframe-resizer"
+		"url": "git+https://github.com/Lemick/open-iframe-resizer.git"
 	},
+	"engines": {
+		"node": ">=20.0.0"
+	},
+	"keywords": ["iframe", "Resizing", "Resizer", "resize", "cross", "same", "domain", "width", "height", "responsive", "react"],
 	"type": "module",
 	"main": "./dist/open-iframe-resizer-react.umd.js",
 	"module": "./dist/open-iframe-resizer-react.es.js",
@@ -20,16 +23,16 @@
 			"require": "./dist/open-iframe-resizer-react.umd.js"
 		}
 	},
+	"files": ["dist", "README.md", "LICENSE.md"],
 	"scripts": {
 		"build": "tsc && npm run lint && vite build",
 		"lint": "biome lint ./src",
 		"dev": "concurrently \"vite build --watch\" \"npm run serve\"",
 		"serve": "vite --port 5552",
-		"test": "npx playwright install --with-deps && npx playwright test",
-		"prepack": "json -f package.json -I -e \"delete this.devDependencies;\""
+		"test": "npx playwright install --with-deps && npx playwright test"
 	},
 	"dependencies": {
-		"@open-iframe-resizer/core": "^1.0.0"
+		"@open-iframe-resizer/core": "^1.0.0-rc5"
 	},
 	"devDependencies": {
 		"react": "18.2.0",
@@ -48,6 +51,5 @@
 	"peerDependencies": {
 		"react": ">=17.0.0",
 		"react-dom": ">=17.0.0"
-	},
-	"files": ["dist"]
+	}
 }

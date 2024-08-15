@@ -1,14 +1,17 @@
 {
 	"name": "@open-iframe-resizer/core",
 	"private": false,
-	"version": "1.0.0",
-	"description": "An open iframe resizer library",
+	"version": "1.0.0-rc5",
+	"description": "Open-source modern iframe resizer",
 	"license": "MIT",
-	"keywords": ["iframe-resizer", "iframe", "resize"],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Lemick/open-iframe-resizer"
+		"url": "git+https://github.com/Lemick/open-iframe-resizer.git"
 	},
+	"engines": {
+		"node": ">=20.0.0"
+	},
+	"keywords": ["iframe", "Resizing", "Resizer", "resize", "cross", "same", "domain", "width", "height", "responsive"],
 	"type": "module",
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.js",
@@ -20,7 +23,7 @@
 			"require": "./dist/index.cjs"
 		}
 	},
-	"files": ["dist"],
+	"files": ["dist", "README.md", "LICENSE.md"],
 	"scripts": {
 		"docs": "npm run typedoc",
 		"lint": "biome lint ./src",
@@ -34,7 +37,6 @@
 		"test:unit": "vitest run"
 	},
 	"devDependencies": {
-		"@microsoft/tsdoc": "^0.14.1",
-		"picocolors": "^1.0.1"
+		"@microsoft/tsdoc": "^0.14.1"
 	}
 }

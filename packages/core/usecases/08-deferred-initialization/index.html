@@ -13,19 +13,16 @@
   </style>
 </head>
 <div>
-  <h1>A page that contains an iframe from a different origin</h1>
-  <iframe id="myIframe" src="http://localhost:5551/usecases/07-custom-allowed-origins/iframe-content.html"></iframe>
+  <h1 id="title">The lib will be initialized in few seconds</h1>
+  <iframe src="./iframe-content.html"></iframe>
 </div>
 
 <body>
 
-<script
-  src="/dist/index.umd.cjs"
-  type="text/javascript"
-></script>
+<script type="module">
+  import { initialize } from "/dist/index.js";
 
-<script>
-  window.iframeResizer.initialize({ checkOrigin: ["http://localhost:5551"] });
+  setInterval(initialize, 3000);
 </script>
 </body>
 </html>
