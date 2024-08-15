@@ -33,3 +33,5 @@ stats.html
 **/playwright-report/
 **/blob-report/
 **/playwright/.cache/
+
+packages/**/README.md

@@ -1,7 +1,7 @@
 {
 	"name": "@open-iframe-resizer/core",
 	"private": false,
-	"version": "1.0.0-rc5",
+	"version": "1.0.0-rc6",
 	"description": "Open-source modern iframe resizer",
 	"license": "MIT",
 	"repository": {
@@ -23,7 +23,7 @@
 			"require": "./dist/index.cjs"
 		}
 	},
-	"files": ["dist", "README.md", "LICENSE.md"],
+	"files": ["dist", "README.md"],
 	"scripts": {
 		"docs": "npm run typedoc",
 		"lint": "biome lint ./src",
@@ -34,9 +34,10 @@
 		"serve": "concurrently \"vite --port 5550\" \"vite --port 5551\"",
 		"test": "npm run test:unit && npm run test:e2e",
 		"test:e2e": "npx playwright install --with-deps && npx playwright test",
-		"test:unit": "vitest run"
+		"test:unit": "vitest run",
+		"prepare": "copyfiles -V ../../README.md packages/core"
 	},
 	"devDependencies": {
-		"@microsoft/tsdoc": "^0.14.1"
+		"@microsoft/tsdoc": "^0.15.0"
 	}
 }
