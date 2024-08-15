@@ -1,7 +1,7 @@
 {
 	"name": "@open-iframe-resizer/core",
 	"private": false,
-	"version": "1.0.0-rc6",
+	"version": "1.0.0",
 	"description": "Open-source modern iframe resizer",
 	"license": "MIT",
 	"repository": {
@@ -11,7 +11,18 @@
 	"engines": {
 		"node": ">=20.0.0"
 	},
-	"keywords": ["iframe", "Resizing", "Resizer", "resize", "cross", "same", "domain", "width", "height", "responsive"],
+	"keywords": [
+		"iframe",
+		"Resizing",
+		"Resizer",
+		"resize",
+		"cross",
+		"same",
+		"domain",
+		"width",
+		"height",
+		"responsive"
+	],
 	"type": "module",
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.js",
@@ -23,7 +34,10 @@
 			"require": "./dist/index.cjs"
 		}
 	},
-	"files": ["dist", "README.md"],
+	"files": [
+		"dist",
+		"README.md"
+	],
 	"scripts": {
 		"docs": "npm run typedoc",
 		"lint": "biome lint ./src",

@@ -4,31 +4,31 @@ import { type PluginOption, defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 
 export default defineConfig((env) => ({
-	plugins: [
-		visualizer() as PluginOption,
-		dts({
-			entryRoot: "src",
-			copyDtsFiles: true,
-			tsconfigPath: path.join(__dirname, "tsconfig.json"),
-		}),
-	],
-	resolve: {
-		alias: [
-			{
-				find: "~",
-				replacement: path.resolve(__dirname, "./src"),
-			},
-		],
-	},
-	build: {
-		minify: "esbuild",
-		sourcemap: env.command === "serve",
-		reportCompressedSize: true,
-		lib: {
-			name: "iframeResizer",
-			entry: path.resolve(__dirname, "src/index.ts"),
-			fileName: "index",
-			formats: ["es", "umd"],
-		},
-	},
+  plugins: [
+    visualizer() as PluginOption,
+    dts({
+      entryRoot: "src",
+      copyDtsFiles: true,
+      tsconfigPath: path.join(__dirname, "tsconfig.json"),
+    }),
+  ],
+  resolve: {
+    alias: [
+      {
+        find: "~",
+        replacement: path.resolve(__dirname, "./src"),
+      },
+    ],
+  },
+  build: {
+    minify: "esbuild",
+    sourcemap: env.command === "serve",
+    reportCompressedSize: true,
+    lib: {
+      name: "iframeResizer",
+      entry: path.resolve(__dirname, "src/index.ts"),
+      fileName: "index",
+      formats: ["es", "umd"],
+    },
+  },
 }));

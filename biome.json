@@ -5,6 +5,7 @@
 		"enabled": true
 	},
 	"formatter": {
+		"indentStyle": "space",
 		"indentWidth": 2,
 		"lineWidth": 160
 	},
@@ -21,6 +22,6 @@
 		}
 	},
 	"files": {
-		"ignore": []
+		"ignore": ["package.json"]
 	}
 }

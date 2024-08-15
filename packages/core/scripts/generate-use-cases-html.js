@@ -7,11 +7,11 @@ const DIR_PATH = "./usecases";
  * Used to generate the /usecases/root.html file
  */
 (async () => {
-	try {
-		const files = await fs.readdir(DIR_PATH, { withFileTypes: true });
-		const directories = files.filter((file) => file.isDirectory());
+  try {
+    const files = await fs.readdir(DIR_PATH, { withFileTypes: true });
+    const directories = files.filter((file) => file.isDirectory());
 
-		let htmlContent = `
+    let htmlContent = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,25 +29,25 @@ const DIR_PATH = "./usecases";
   <ul>
 `;
 
-		for (const dir of directories) {
-			htmlContent += `    <li><a href="./${dir.name}/index.html">${prettifyTitle(dir.name)}</a></li>\n`;
-		}
+    for (const dir of directories) {
+      htmlContent += `    <li><a href="./${dir.name}/index.html">${prettifyTitle(dir.name)}</a></li>\n`;
+    }
 
-		htmlContent += `
+    htmlContent += `
   </ul>
 </body>
 </html>
 `;
-		await fs.writeFile(path.join(DIR_PATH, "root.html"), htmlContent);
-		console.log("root.html has been generated successfully.");
-	} catch (err) {
-		console.error("Error:", err);
-	}
+    await fs.writeFile(path.join(DIR_PATH, "root.html"), htmlContent);
+    console.log("root.html has been generated successfully.");
+  } catch (err) {
+    console.error("Error:", err);
+  }
 })();
 
 function prettifyTitle(input) {
-	return input
-		.split("-")
-		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-		.join(" ");
+  return input
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }

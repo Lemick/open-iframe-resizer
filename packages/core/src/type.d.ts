@@ -1,7 +1,7 @@
 interface Window {
-	iframeResizer: {
-		initialize: InitializeFunction;
-	};
+  iframeResizer: {
+    initialize: InitializeFunction;
+  };
 }
 
 /**
@@ -14,14 +14,14 @@ export type InitializeFunction = (settings?: Partial<Settings>, selector?: strin
 export type InitializeResult = { unsubscribe: () => void };
 
 export type Settings = {
-	offsetSize: number;
-	checkOrigin: string[] | boolean;
+  offsetSize: number;
+  checkOrigin: string[] | boolean;
 };
 
 export type IframeResizeEventData = {
-	type: "iframe-resized";
-	width: number;
-	height: number;
+  type: "iframe-resized";
+  width: number;
+  height: number;
 };
 
 export type IframeResizeEvent = MessageEvent<IframeResizeEventData>;

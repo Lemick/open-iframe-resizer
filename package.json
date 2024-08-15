@@ -29,5 +29,6 @@
   "workspaces": [
     "packages/core",
     "packages/react"
-  ]
+  ],
+  "version": "0.0.1"
 }
