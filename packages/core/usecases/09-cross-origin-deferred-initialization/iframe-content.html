@@ -12,7 +12,7 @@
   </style>
 </head>
 <body>
-<h1 id="title">Iframe content</h1>
+<h1 id="title">Iframe from a different origin (iframe resize script will make 3 seconds to load)</h1>
 <p id="content">This is the initial text that loads with the page.</p>
 
 <script>
@@ -30,6 +30,13 @@
     }
   }, 500);
 </script>
+
+<script type="module">
+  setTimeout(() => {
+    import("/dist/index.js").then(() => console.log("Module loaded"));
+  }, 3000);
+</script>
+
 
 </body>
 </html>

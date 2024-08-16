@@ -1,4 +1,4 @@
-import { isInIframe } from "~/common";
+import { deferWhenWindowIsLoaded, isInIframe } from "~/common";
 import type { IframeResizeEventData } from "./type";
 
 if (isInIframe()) {
@@ -6,7 +6,7 @@ if (isInIframe()) {
 }
 
 function initializeChildListener() {
-  window.addEventListener("load", () => {
+  deferWhenWindowIsLoaded(window, () => {
     const resizeObserverCallback = () => {
       const data: IframeResizeEventData = {
         type: "iframe-resized",

@@ -49,3 +49,9 @@ test("Should resize iframe when the script is initialized after the iframe is lo
 
   await page.waitForFunction(allIframesHasBeenResized);
 });
+
+test("Should resize iframe from cross-origin when the iframe take a lot of time to load the script", async ({ page }) => {
+  await page.goto("/usecases/09-cross-origin-deferred-initialization/index.html");
+
+  await page.waitForFunction(allIframesHasBeenResized);
+});

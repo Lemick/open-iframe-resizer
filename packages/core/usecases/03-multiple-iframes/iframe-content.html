@@ -17,21 +17,19 @@
 
 <script>
   const lorem = "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium\n";
-  document.addEventListener("DOMContentLoaded", () => {
-    const content = document.getElementById("content");
-    const additionalText = lorem.repeat(10);
-    const randomInterval = () => Math.floor(Math.random() * (2000 - 1000 + 1)) + 1000;
+  const content = document.getElementById("content");
+  const additionalText = lorem.repeat(10);
+  const randomInterval = () => Math.floor(Math.random() * (2000 - 1000 + 1)) + 1000;
 
-    let times = 0;
-    const intervalId = setInterval(() => {
-      if (times < 3) {
-        content.innerHTML += additionalText;
-        times++;
-      } else {
-        clearInterval(intervalId);
-      }
-    }, randomInterval());
-  });
+  let times = 0;
+  const intervalId = setInterval(() => {
+    if (times < 3) {
+      content.innerHTML += additionalText;
+      times++;
+    } else {
+      clearInterval(intervalId);
+    }
+  }, randomInterval());
 </script>
 </body>
 </html>
