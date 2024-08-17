@@ -2,7 +2,7 @@
 
 ## Overview
 
-A modern, lightweight library for resizing iframes dynamically. It is shipped under the MIT license, making it usable in commercial projects.
+A modern, lightweight alternative for resizing iframes dynamically. It is shipped under the MIT license, making it usable in commercial projects.
 
 If you found this plugin helpful, please consider starring the repository! 
 
@@ -21,15 +21,24 @@ If you found this plugin helpful, please consider starring the repository!
 You can found a working example [here](https://codesandbox.io/p/sandbox/open-iframe-resize-browser-m655zt)
 
 ### Package
-Note you can also install the package through npm:
+Note you can also install the core package through [npm](https://www.npmjs.com/package/@open-iframe-resizer/core):
 ```bash
 npm install @open-iframe-resizer/core
 ```
 
+### React
+A React component is also available:
+```bash
+npm install @open-iframe-resizer/react
+```
+
 ## Notes
 
-### Retro-compatibility
-I decided to replicate the API from the well-known iframe-resizer library, as it may facilitate migration to this project (you only need to change the script).
+### Comparison with iframe-resizer
+This library is very good, but it has changed its license, so it is no longer usable in closed-source projects for free.
+I decided to replicate the API, as it may facilitate migration to this project (you only need to change the script).
+
+Some features from this library are missing, but they could be implemented in future versions.
 
 ### Resize cross-origin iframes
 To resize iframes from a different origin, you also need to load the script on your child page to enable messaging between the two windows (you do not need to call the initialize function in the child; loading the module is sufficient).
