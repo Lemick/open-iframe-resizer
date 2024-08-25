@@ -17,9 +17,11 @@ echo "Updating core package version to $NEW_VERSION..."
 
 echo "Updating react package and its dependency version to $NEW_VERSION..."
 (
-  npm install @open-iframe-resizer/core --workspace=packages/react --save-exact
+  npm --workspace=packages/react pkg set "dependencies.@open-iframe-resizer/core=$1"
   cd "$REACT_PACKAGE_DIR" || exit
   npm version "$NEW_VERSION" --no-git-tag-version
 )
+
+npm install
 
 echo "All versions updated successfully!"

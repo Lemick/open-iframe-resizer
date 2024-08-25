@@ -1,7 +1,7 @@
 {
 	"name": "@open-iframe-resizer/react",
 	"private": false,
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"description": "Open-source modern iframe resizer component",
 	"license": "MIT",
 	"repository": {
@@ -48,7 +48,7 @@
 		"test": "npx playwright install --with-deps && npx playwright test"
 	},
 	"dependencies": {
-		"@open-iframe-resizer/core": "1.0.0"
+		"@open-iframe-resizer/core": "1.1.0"
 	},
 	"devDependencies": {
 		"@babel/core": "7.22.10",
