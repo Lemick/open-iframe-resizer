@@ -36,12 +36,18 @@ npm install @open-iframe-resizer/react
 
 ### Comparison with iframe-resizer
 This library is very good, but it has changed its license, so it is no longer usable in closed-source projects for free.
-I decided to replicate the API, as it may facilitate migration to this project (you only need to change the script).
+I decided to replicate some parts of the API, as it may facilitate migration to this project.
 
 Some features from this library are missing, but they could be implemented in future versions.
 
-### Resize cross-origin iframes
-To resize iframes from a different origin, you also need to load the script on your child page to enable messaging between the two windows (you do not need to call the initialize function in the child; loading the module is sufficient).
+### Resize iframes from a different origin
+- If you have control over the embedded page, you need to load the script on your child page to enable messaging between the two windows (you do not need to call the initialize function in the child; loading the module is sufficient).
+
+- If you have no control over the child iframe domain, and, by chance, the child page loads the legacy *iframe-resizer* script, you can initialize the library with the compatibility mode; it will try to connect to the child iframe:
+
+```javascript
+initialize({ enableLegacyLibSupport: true }, "#my-iframe");
+```
 
 ## Browser support
 

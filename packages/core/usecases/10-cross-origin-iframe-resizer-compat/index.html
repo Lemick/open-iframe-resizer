@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iframe Resize Example</title>
+  <style>
+      iframe {
+          border: 2px dotted red;
+          width: 100%;
+          height: 400px;
+      }
+  </style>
+</head>
+<div>
+  <h1>A page that contains an iframe from a different origin</h1>
+  <iframe id="myIframe" src="http://localhost:5551/usecases/10-cross-origin-iframe-resizer-compat/iframe-content.html"></iframe>
+</div>
+
+<body>
+
+<script
+  src="/dist/index.umd.cjs"
+  type="text/javascript"
+></script>
+
+<script>
+  window.iframeResizer.initialize({ enableLegacyLibSupport: true });
+</script>
+</body>
+</html>

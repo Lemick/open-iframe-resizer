@@ -43,8 +43,8 @@
 	"scripts": {
 		"build": "tsc && npm run lint && vite build",
 		"lint": "biome lint ./src",
-		"dev": "concurrently \"vite build --watch\" \"npm run serve\"",
-		"serve": "vite --port 5552",
+		"dev": "concurrently \"vite build --watch \" \"npm run serve\"",
+		"serve": "concurrently \"vite --port 5552\" \"vite --port 5553\"",
 		"test": "npx playwright install --with-deps && npx playwright test"
 	},
 	"dependencies": {

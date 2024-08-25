@@ -1,46 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>React in HTML</title>
+  <title>Open Iframe Resizer React</title>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+  />
 </head>
+
 <body>
-
-<div id="root"></div>
-
-<script src="./dist/open-iframe-resizer-react.umd.js"></script>
-<script type="module">
-  import React from "react";
-  import { createRoot } from "react-dom/client";
-  import { IframeResizer } from "./dist/open-iframe-resizer-react.es";
-
-  function App() {
-    const [mounted, setMounted] = React.useState(false);
-
-    const toggleIframe = function () {
-      setMounted(!mounted);
-    };
-
-    return React.createElement(
-      'div',
-      null,
-      React.createElement(
-        'button',
-        { onClick: toggleIframe },
-        mounted ? 'Unmount Iframe' : 'Mount Iframe'
-      ),
-      mounted &&
-      React.createElement(IframeResizer, {
-        src: '/index-iframe-example.html',
-        style: { width: '100%' },
-      })
-    );
-  }
-
-  const domNode = document.getElementById("root");
-  const root = createRoot(domNode);
-  root.render(React.createElement(App, {}));
-</script>
+<div class="container">
+  <section class="articles">
+    <div class="column is-8 is-offset-2">
+      <div class="card article">
+        <div class="card-content">
+          <div class="media">
+            <div class="media-content has-text-centered">
+              <p class="title article-title">
+                Open Iframe Resizer
+              </p>
+            </div>
+          </div>
+          <div class="content article-body">
+            <ul>
+              <li>
+                <a href="/usecases/root.html">Use cases examples</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
 </body>
 </html>

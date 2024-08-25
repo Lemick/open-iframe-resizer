@@ -3,19 +3,26 @@ import { type IframeHTMLAttributes, useEffect, useRef } from "react";
 
 interface Props extends IframeHTMLAttributes<HTMLIFrameElement>, Partial<Settings> {}
 
-function IframeResizer(props: Props) {
+export function IframeResizer(props: Props) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const { settings, iframeAttributes } = filterProps(props);
 
   useEffect(() => {
     if (!iframeRef.current) {
       return;
     }
-
-    const results = initialize({}, iframeRef.current);
+    const results = initialize(settings, iframeRef.current);
     return () => results.forEach((value) => value.unsubscribe());
   }, []);
 
-  return <iframe {...props} ref={iframeRef} />;
+  return <iframe {...iframeAttributes} ref={iframeRef} />;
 }
 
-export { IframeResizer };
+function filterProps(props: Props): { iframeAttributes: IframeHTMLAttributes<HTMLIFrameElement>; settings: Partial<Settings> } {
+  const { offsetSize, enableLegacyLibSupport, checkOrigin, ...iframeAttributes } = props;
+
+  // biome-ignore lint/suspicious/noExplicitAny: Only here to provide key exhaustiveness
+  const settings: { [K in keyof Settings]: any } = { offsetSize, enableLegacyLibSupport, checkOrigin };
+
+  return { iframeAttributes, settings };
+}

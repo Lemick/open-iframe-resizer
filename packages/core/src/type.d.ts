@@ -14,8 +14,28 @@ export type InitializeFunction = (settings?: Partial<Settings>, selector?: strin
 export type InitializeResult = { unsubscribe: () => void };
 
 export type Settings = {
+  /**
+   * Offset added to the resize size (in pixels).
+   *
+   * Default: 0
+   */
   offsetSize: number;
+  /**
+   * Specifies whether to check the origin of incoming messages.
+   * Accepts an array of allowed origins or a boolean.
+   * If true, incoming messages are allowed from the origins of the registered iframes.
+   *
+   * Default: true
+   */
   checkOrigin: string[] | boolean;
+  /**
+   * Allows the library to communicate with a cross-origin child iframe
+   * containing the original "iframe-resizer" script.
+   * Useful if you do not control the child domain.
+   *
+   * Default: false
+   */
+  enableLegacyLibSupport: boolean;
 };
 
 export type IframeResizeEventData = {

@@ -1,11 +1,19 @@
-import { deferWhenIframeIsLoaded, getDefaultSettings, isHtmlIframeElement, isIframeSameOrigin } from "~/common";
+import {
+  deferWhenSameOriginIframeIsLoaded,
+  extractIframeOrigin,
+  getDefaultSettings,
+  isHtmlIframeElement,
+  isIframeSameOrigin,
+  removeUndefinedProperties,
+} from "~/common";
+import { handleLegacyLibResizeMessage, sendLegacyLibInitMessageOnIframeLoad } from "~/compat";
 import type { IframeResizeEvent, InitializeFunction, Settings } from "./type";
 
 const resizeObserver = createResizeObserver();
 const registeredIframes: Array<{ iframe: HTMLIFrameElement; settings: Settings }> = [];
 
 const initialize: InitializeFunction = (clientSettings, selector) => {
-  const finalSettings = { ...getDefaultSettings(), ...clientSettings };
+  const finalSettings = { ...getDefaultSettings(), ...removeUndefinedProperties(clientSettings ?? {}) };
   const iframes = resolveIframesToRegister(selector);
   const allowedOrigins = registerIframesAllowOrigins(finalSettings, iframes);
 
@@ -50,16 +58,6 @@ function registerIframesAllowOrigins(settings: Settings, iframes: HTMLIFrameElem
   return allowedOrigins;
 }
 
-function extractIframeOrigin(iframe: HTMLIFrameElement): string | null {
-  try {
-    const origin = new URL(iframe.src).origin;
-    if (origin !== "about:blank") {
-      return origin;
-    }
-  } catch (error) {}
-  return null;
-}
-
 function addChildResizeListener(iframe: HTMLIFrameElement, settings: Settings, allowedOrigins: string[]) {
   if (isIframeSameOrigin(iframe)) {
     return addSameOriginChildResizeListener(iframe);
@@ -70,16 +68,32 @@ function addChildResizeListener(iframe: HTMLIFrameElement, settings: Settings, a
 function addCrossOriginChildResizeListener(iframe: HTMLIFrameElement, settings: Settings, allowedOrigins: string[]) {
   const handleIframeResizedMessage = (event: MessageEvent) => {
     const isOriginValid = !settings.checkOrigin || allowedOrigins.includes(event.origin);
+    const isIframeTarget = iframe.contentWindow === event.source;
 
-    if (isOriginValid && event.data?.type === "iframe-resized" && iframe.contentWindow === event.source) {
+    if (!isIframeTarget || !isOriginValid) {
+      return;
+    }
+
+    if (event.data?.type === "iframe-resized") {
       const { height } = (event as IframeResizeEvent).data;
       updateIframeDimensions({ height, iframe, settings });
+      return;
+    }
+
+    if (settings.enableLegacyLibSupport) {
+      const height = handleLegacyLibResizeMessage(event);
+      height !== null && updateIframeDimensions({ height, iframe, settings });
+      return;
     }
   };
 
-  window.addEventListener("message", handleIframeResizedMessage, false);
+  window.addEventListener("message", handleIframeResizedMessage);
 
-  return () => window.removeEventListener("message", handleIframeResizedMessage, false);
+  if (settings.enableLegacyLibSupport) {
+    sendLegacyLibInitMessageOnIframeLoad(iframe);
+  }
+
+  return () => window.removeEventListener("message", handleIframeResizedMessage);
 }
 
 function addSameOriginChildResizeListener(iframe: HTMLIFrameElement) {
@@ -93,7 +107,7 @@ function addSameOriginChildResizeListener(iframe: HTMLIFrameElement) {
     resizeObserver.observe(contentBody);
   };
 
-  deferWhenIframeIsLoaded(iframe, startListener);
+  deferWhenSameOriginIframeIsLoaded(iframe, startListener);
 
   return () => {
     if (iframe.contentDocument?.body) {
@@ -120,7 +134,7 @@ function createResizeObserver() {
 }
 
 function updateIframeDimensions({ height, iframe, settings }: { iframe: HTMLIFrameElement; height: number; settings: Settings }) {
-  iframe.style.height = `${height + settings.offsetSize}px`;
+  iframe.style.height = `${height + settings.offsetSize + 1}px`;
 }
 
 export { initialize };

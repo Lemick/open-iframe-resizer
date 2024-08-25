@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Loader Example</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          padding: 20px;
+      }
+  </style>
+</head>
+<body>
+<h1 id="title">Iframe from a different origin</h1>
+<p id="content">This is the initial text that loads with the page.</p>
+
+<script type="module" src="../../dist/open-iframe-resizer-react.es.js"></script>
+
+<script>
+  const lorem = "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat\n";
+  const content = document.getElementById("content");
+  const additionalText = lorem.repeat(10);
+
+  let times = 0;
+  const intervalId = setInterval(() => {
+    if (times < 3) {
+      content.innerHTML += additionalText;
+      times++;
+    } else {
+      clearInterval(intervalId);
+    }
+  }, 500);
+</script>
+
+</body>
+</html>

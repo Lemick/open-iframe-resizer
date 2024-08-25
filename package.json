@@ -4,8 +4,10 @@
   "scripts": {
     "build": "npm run build --workspaces",
     "dev": "npm run dev --workspaces",
-    "test": "npm run test --workspaces"
+    "test": "npm run test --workspaces",
+    "build:usecases": "node ./scripts/generate-use-cases-html.js"
   },
+  "type": "module",
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
     "@commitlint/cli": "^19.3.0",

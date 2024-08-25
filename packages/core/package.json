@@ -43,7 +43,6 @@
 		"lint": "biome lint ./src",
 		"build": "tsc && npm run lint && vite build && typedoc",
 		"build:watch": "vite build --watch && typedoc",
-		"build:usecases-html": "node scripts/generate-use-cases-html.js",
 		"dev": "concurrently \"vite build --watch\" \"npm run serve\"",
 		"serve": "concurrently \"vite --port 5550\" \"vite --port 5551\"",
 		"test": "npm run test:unit && npm run test:e2e",

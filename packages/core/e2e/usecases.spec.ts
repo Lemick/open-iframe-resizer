@@ -55,3 +55,9 @@ test("Should resize iframe from cross-origin when the iframe take a lot of time 
 
   await page.waitForFunction(allIframesHasBeenResized);
 });
+
+test("Should resize iframe from cross-origin when the child iframe only contains the original 'iframe-resizer' child script", async ({ page }) => {
+  await page.goto("/usecases/10-cross-origin-iframe-resizer-compat/index.html");
+
+  await page.waitForFunction(allIframesHasBeenResized);
+});
