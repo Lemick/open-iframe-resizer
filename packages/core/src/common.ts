@@ -50,3 +50,8 @@ export const removeUndefinedProperties = <T extends { [key: string]: unknown }>(
   Object.keys(object).forEach((key) => object[key] === undefined && delete object[key]);
   return object;
 };
+
+export const getBoundingRectHeight = (document: Document) => {
+  const { height } = document.documentElement.getBoundingClientRect() ?? {};
+  return height ? Math.ceil(height) : undefined;
+};
