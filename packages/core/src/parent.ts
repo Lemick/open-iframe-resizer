@@ -1,6 +1,7 @@
 import {
   deferWhenSameOriginIframeIsLoaded,
   extractIframeOrigin,
+  getBoundingRectHeight,
   getDefaultSettings,
   isHtmlIframeElement,
   isIframeSameOrigin,
@@ -76,7 +77,7 @@ function addCrossOriginChildResizeListener(iframe: HTMLIFrameElement, settings: 
 
     if (event.data?.type === "iframe-resized") {
       const { height } = (event as IframeResizeEvent).data;
-      updateIframeDimensions({ height, iframe, settings });
+      height && updateIframeDimensions({ height, iframe, settings });
       return;
     }
 
@@ -124,17 +125,21 @@ function createResizeObserver() {
       return;
     }
     const { iframe, settings } = matchingRegisteredIframe;
-    const { scrollHeight, scrollWidth } = iframe.contentDocument?.documentElement ?? {};
-    if (scrollHeight !== undefined && scrollWidth !== undefined) {
-      updateIframeDimensions({ height: scrollHeight, iframe, settings });
+    if (!iframe.contentDocument) {
+      return;
     }
+    const calculatedHeight = getBoundingRectHeight(iframe.contentDocument);
+    if (!calculatedHeight) {
+      return;
+    }
+    updateIframeDimensions({ height: calculatedHeight, iframe, settings });
   };
 
   return new ResizeObserver((entries) => entries.forEach(handleEntry));
 }
 
 function updateIframeDimensions({ height, iframe, settings }: { iframe: HTMLIFrameElement; height: number; settings: Settings }) {
-  iframe.style.height = `${height + settings.offsetSize + 1}px`;
+  iframe.style.height = `${height + settings.offsetSize}px`;
 }
 
 export { initialize };

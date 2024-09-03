@@ -41,7 +41,7 @@ export type Settings = {
 export type IframeResizeEventData = {
   type: "iframe-resized";
   width: number;
-  height: number;
+  height?: number;
 };
 
 export type IframeResizeEvent = MessageEvent<IframeResizeEventData>;

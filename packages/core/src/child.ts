@@ -1,4 +1,4 @@
-import { deferWhenWindowIsLoaded, isInIframe } from "~/common";
+import { deferWhenWindowIsLoaded, getBoundingRectHeight, isInIframe } from "~/common";
 import type { IframeResizeEventData } from "./type";
 
 if (isInIframe()) {
@@ -11,7 +11,7 @@ function initializeChildListener() {
       const data: IframeResizeEventData = {
         type: "iframe-resized",
         width: document.documentElement.scrollWidth,
-        height: document.documentElement.scrollHeight,
+        height: getBoundingRectHeight(document) ?? undefined,
       };
       window.parent.postMessage(data, "*");
     };
