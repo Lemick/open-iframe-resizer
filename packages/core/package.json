@@ -1,7 +1,7 @@
 {
 	"name": "@open-iframe-resizer/core",
 	"private": false,
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"description": "Open-source modern iframe resizer",
 	"license": "MIT",
 	"repository": {
