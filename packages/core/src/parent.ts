@@ -11,7 +11,7 @@ import { handleLegacyLibResizeMessage, sendLegacyLibInitMessageOnIframeLoad } fr
 import type { IframeResizeEvent, InitializeFunction, Settings } from "./type";
 
 const resizeObserver = createResizeObserver();
-const registeredIframes: Array<{ iframe: HTMLIFrameElement; settings: Settings }> = [];
+let registeredIframes: Array<{ iframe: HTMLIFrameElement; settings: Settings }> = [];
 
 const initialize: InitializeFunction = (clientSettings, selector) => {
   const finalSettings = { ...getDefaultSettings(), ...removeUndefinedProperties(clientSettings ?? {}) };
@@ -19,12 +19,12 @@ const initialize: InitializeFunction = (clientSettings, selector) => {
   const allowedOrigins = registerIframesAllowOrigins(finalSettings, iframes);
 
   return iframes.map((iframe) => {
-    const length = registeredIframes.push({ iframe, settings: finalSettings });
+    registeredIframes.push({ iframe, settings: finalSettings });
     const unsubscribeResizeListener = addChildResizeListener(iframe, finalSettings, allowedOrigins);
     return {
       unsubscribe: () => {
         unsubscribeResizeListener();
-        registeredIframes.splice(length - 1, 1);
+        registeredIframes = registeredIframes.filter((entry) => entry.iframe !== iframe);
       },
     };
   });
