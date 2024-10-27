@@ -71,3 +71,9 @@ test("Should resize iframe whether it shrinks or grows", async ({ page }) => {
 
   await page.waitForFunction<boolean, AssertArg>(allIframesOffsetHeightMatch, { comparator: "lesserThan", threshold: 700 });
 });
+
+test("Should not resize iframe when unsubscribed", async ({ page }) => {
+  await page.goto("/usecases/12-unsubscribe-listener/index.html");
+
+  await page.waitForFunction<boolean, AssertArg>(allIframesOffsetHeightMatch, { comparator: "lesserThan", threshold: 700 });
+});
