@@ -11,7 +11,7 @@ function initializeChildListener() {
       const data: IframeResizeEventData = {
         type: "iframe-resized",
         width: document.documentElement.scrollWidth,
-        height: getBoundingRectHeight(document) ?? undefined,
+        height: getBoundingRectHeight(document),
       };
       window.parent.postMessage(data, "*");
     };

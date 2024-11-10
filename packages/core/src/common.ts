@@ -49,6 +49,6 @@ export const removeUndefinedProperties = <T extends { [key: string]: unknown }>(
 };
 
 export const getBoundingRectHeight = (document: Document) => {
-  const { height } = document.documentElement.getBoundingClientRect() ?? {};
-  return height ? Math.ceil(height) : undefined;
+  const { height } = document.documentElement.getBoundingClientRect();
+  return Math.ceil(height);
 };
