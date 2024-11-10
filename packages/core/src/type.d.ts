@@ -42,7 +42,7 @@ export type Settings = {
    *
    * Default: `undefined`
    */
-  onIframeResize?: (context: ResizeContext) => void;
+  onIframeResize: (context: ResizeContext) => void;
 };
 
 export type IframeResizeEventData = {
