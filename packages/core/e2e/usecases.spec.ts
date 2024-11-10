@@ -78,7 +78,7 @@ test("Should not resize iframe when unsubscribed", async ({ page }) => {
   await page.waitForFunction<boolean, AssertArg>(allIframesOffsetHeightMatch, { comparator: "lesserThan", threshold: 700 });
 });
 
-test("Should be able to update parent window scroll when an iframe is resized", async ({ page }) => {
+test("Should scroll in the parent window when an iframe is resized to keep the iframe in the viewport", async ({ page }) => {
   await page.goto("/usecases/13-update-parent-scroll-on-resize/index.html");
   await expect(page).toHaveScreenshot("01-initial-state.png");
 
