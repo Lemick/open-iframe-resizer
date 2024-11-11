@@ -31,4 +31,9 @@ export default defineConfig((env) => ({
       formats: ["es", "umd"],
     },
   },
+  server: {
+    watch: {
+      ignored: ["!**/dist/**"], // Force HMR for build.output
+    },
+  },
 }));

@@ -36,4 +36,9 @@ export default defineConfig((env) => ({
     globals: true,
     environment: "jsdom",
   },
+  server: {
+    watch: {
+      ignored: ["!**/dist/**"], // Force HMR for build.output
+    },
+  },
 }));
