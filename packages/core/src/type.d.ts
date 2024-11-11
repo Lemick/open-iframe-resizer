@@ -17,15 +17,15 @@ export type Settings = {
   /**
    * Offset added to the resize size (in pixels).
    *
-   * Default: 0
+   * Default: `0`
    */
   offsetSize: number;
   /**
    * Specifies whether to check the origin of incoming messages.
    * Accepts an array of allowed origins or a boolean.
-   * If true, incoming messages are allowed from the origins of the registered iframes.
+   * If `true`, incoming messages are allowed from the origins of the registered iframes.
    *
-   * Default: true
+   * Default: `true`
    */
   checkOrigin: string[] | boolean;
   /**
@@ -33,9 +33,16 @@ export type Settings = {
    * containing the original "iframe-resizer" script.
    * Useful if you do not control the child domain.
    *
-   * Default: false
+   * Default: `false`
    */
   enableLegacyLibSupport: boolean;
+  /**
+   * Listener that is called after the iframe has been resized.
+   * You can use a predefined handler like `updateParentScrollOnResize` or create your own custom handler.
+   *
+   * Default: `undefined`
+   */
+  onIframeResize?: (context: ResizeContext) => void;
 };
 
 export type IframeResizeEventData = {
@@ -45,3 +52,17 @@ export type IframeResizeEventData = {
 };
 
 export type IframeResizeEvent = MessageEvent<IframeResizeEventData>;
+
+export type InteractionState = {
+  isHovered: boolean;
+};
+
+export type ResizeRenderState = { rect: DOMRect };
+
+export type ResizeContext = {
+  iframe: HTMLIFrameElement;
+  settings: Settings;
+  interactionState: InteractionState;
+  previousRenderState: ResizeRenderState;
+  nextRenderState: ResizeRenderState;
+};

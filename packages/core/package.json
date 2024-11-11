@@ -1,7 +1,7 @@
 {
 	"name": "@open-iframe-resizer/core",
 	"private": false,
-	"version": "1.1.3",
+	"version": "1.2.0",
 	"description": "Open-source modern iframe resizer",
 	"license": "MIT",
 	"repository": {
@@ -39,10 +39,10 @@
 		"README.md"
 	],
 	"scripts": {
-		"docs": "npm run typedoc",
+		"docs": "typedoc --options typedoc.json src/",
 		"lint": "biome lint ./src",
-		"build": "tsc && npm run lint && vite build && typedoc",
-		"build:watch": "vite build --watch && typedoc",
+		"build": "tsc && npm run lint && vite build && npm run docs",
+		"build:watch": "vite build --watch && npm run docs",
 		"dev": "concurrently \"vite build --watch\" \"npm run serve\"",
 		"serve": "concurrently \"vite --port 5550\" \"vite --port 5551\"",
 		"test": "npm run test:unit && npm run test:e2e",
