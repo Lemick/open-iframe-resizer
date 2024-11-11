@@ -13,7 +13,7 @@ If you found this plugin helpful, please consider starring the repository!
 ```html
 
 <script type="module">
-  import { initialize } from "https://cdn.jsdelivr.net/npm/@open-iframe-resizer/core@latest/dist/index.js";
+  import { initialize } from "https://cdn.jsdelivr.net/npm/@open-iframe-resizer/core@latest/dist/index.min.js";
 
   initialize({}, "#my-iframe");
 </script>
@@ -45,7 +45,7 @@ You can execute a custom function after an iframe has been resized. Also, you ca
 like `updateParentScrollOnResize` to help keep the iframe within the viewport after resizing:
 
 ```javascript
-import { initialize, updateParentScrollOnResize } from "https://cdn.jsdelivr.net/npm/@open-iframe-resizer/core@latest/dist/index.js";
+import { initialize, updateParentScrollOnResize } from "https://cdn.jsdelivr.net/npm/@open-iframe-resizer/core@latest/dist/index.min.js";
 
 initialize({ onIframeResize: updateParentScrollOnResize }, "#myIframe");
 ```
