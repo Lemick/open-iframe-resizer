@@ -8,9 +8,6 @@
 		"type": "git",
 		"url": "git+https://github.com/Lemick/open-iframe-resizer.git"
 	},
-	"engines": {
-		"node": ">=20.0.0"
-	},
 	"keywords": [
 		"iframe",
 		"Resizing",
