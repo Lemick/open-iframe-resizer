@@ -1,5 +1,9 @@
 # Open Iframe Resizer
 
+![NPM Version](https://img.shields.io/npm/v/%40open-iframe-resizer%2Fcore)
+![NPM License](https://img.shields.io/npm/l/%40open-iframe-resizer%2Fcore)
+[![](https://data.jsdelivr.com/v1/package/npm/@open-iframe-resizer/core/badge)](https://www.jsdelivr.com/package/npm/@open-iframe-resizer/core)
+
 ## Overview
 
 A modern, lightweight alternative for resizing iframes dynamically. It is shipped under the MIT license, making it usable in commercial projects.
