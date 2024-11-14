@@ -1,6 +1,8 @@
 import type { Settings } from "~/type";
 
-export const isInIframe = () => window && window.self !== window.top;
+export const isBrowser = () => typeof window !== "undefined";
+
+export const isInIframe = () => window.self !== window.top;
 
 export const isHtmlIframeElement = (element: Element): element is HTMLIFrameElement => element instanceof HTMLIFrameElement;
 

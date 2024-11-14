@@ -1,11 +1,13 @@
-import { deferWhenWindowIsLoaded, getBoundingRectHeight, isInIframe } from "~/common";
+import { deferWhenWindowIsLoaded, getBoundingRectHeight, isBrowser, isInIframe } from "~/common";
 import type { IframeResizeEventData } from "./type";
 
-if (isInIframe()) {
-  initializeChildListener();
-}
+initializeChildListener();
 
 function initializeChildListener() {
+  if (!isBrowser() || !isInIframe()) {
+    return;
+  }
+
   deferWhenWindowIsLoaded(window, () => {
     const resizeObserverCallback = () => {
       const data: IframeResizeEventData = {

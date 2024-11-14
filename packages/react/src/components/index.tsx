@@ -1,3 +1,5 @@
+"use client";
+
 import { type Settings, initialize } from "@open-iframe-resizer/core";
 import { type IframeHTMLAttributes, useEffect, useRef } from "react";
 
