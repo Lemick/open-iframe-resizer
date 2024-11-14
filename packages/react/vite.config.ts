@@ -1,5 +1,6 @@
 import * as path from "node:path";
 import react from "@vitejs/plugin-react";
+import preserveDirectives from "rollup-preserve-directives";
 import dts from "vite-plugin-dts";
 import { defineConfig } from "vitest/config";
 
@@ -7,9 +8,11 @@ const formattedName = "open-iframe-resizer-react";
 
 export default defineConfig((env) => ({
   plugins: [
+    preserveDirectives(),
     react(),
     dts({
       insertTypesEntry: true,
+      rollupTypes: true,
     }),
   ],
   build: {

@@ -1,11 +1,5 @@
-interface Window {
-  iframeResizer: {
-    initialize: InitializeFunction;
-  };
-}
-
 /**
- * Automatically resizes the selected iframes.
+ * Automatically resize the selected iframes when their inner content grows.
  * @param settings The settings for the selected iframes. The default settings properties are picked if empty.
  * @param selector The selector for the iframe(s) or the HTMLIFrameElement to be resized. If empty, all document iframe elements will be selected.
  * @returns A result array, which can be used to clean up the listeners if you often remove iframes from the document.

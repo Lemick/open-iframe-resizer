@@ -3,6 +3,7 @@ import {
   extractIframeOrigin,
   getBoundingRectHeight,
   getDefaultSettings,
+  isBrowser,
   isHtmlIframeElement,
   isIframeSameOrigin,
   removeUndefinedProperties,
@@ -12,10 +13,13 @@ import type { IframeResizeEvent, InitializeFunction, InteractionState, ResizeCon
 
 type RegisteredElement = { iframe: HTMLIFrameElement; settings: Settings; interactionState: InteractionState };
 
-const resizeObserver = createResizeObserver();
+const resizeObserver: ResizeObserver | null = isBrowser() ? createResizeObserver() : null;
 let registeredElements: Array<RegisteredElement> = [];
 
 const initialize: InitializeFunction = (clientSettings, selector) => {
+  if (!isBrowser()) {
+    return [];
+  }
   const finalSettings = { ...getDefaultSettings(), ...removeUndefinedProperties(clientSettings ?? {}) };
   const iframes = resolveIframesToRegister(selector);
   const allowedOrigins = registerIframesAllowOrigins(finalSettings, iframes);
@@ -108,31 +112,26 @@ function addCrossOriginChildResizeListener(registeredElement: RegisteredElement,
   return () => window.removeEventListener("message", handleIframeResizedMessage);
 }
 
-function addSameOriginChildResizeListener(registeredElement: RegisteredElement) {
-  const { iframe } = registeredElement;
+function addSameOriginChildResizeListener({ iframe }: RegisteredElement) {
   const startListener = () => {
     const contentBody = iframe.contentDocument?.body;
     if (!contentBody) {
-      console.error("Unable to observe the iframe content document body");
       return;
     }
-
-    resizeObserver.observe(contentBody);
+    resizeObserver?.observe(contentBody);
   };
 
   deferWhenSameOriginIframeIsLoaded(iframe, startListener);
 
   return () => {
     if (iframe.contentDocument?.body) {
-      resizeObserver.unobserve(iframe.contentDocument.body);
+      resizeObserver?.unobserve(iframe.contentDocument.body);
     }
     iframe.removeEventListener("load", startListener);
   };
 }
 
-function addInteractionListeners(registeredElement: RegisteredElement) {
-  const { iframe, interactionState } = registeredElement;
-
+function addInteractionListeners({ iframe, interactionState }: RegisteredElement) {
   const onMouseEnter = () => {
     interactionState.isHovered = true;
   };
