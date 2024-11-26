@@ -1,25 +1,61 @@
-import { deferWhenWindowIsLoaded, getBoundingRectHeight, isBrowser, isInIframe } from "~/common";
-import type { IframeResizeEventData } from "./type";
+import { deferWhenWindowDocumentIsLoaded, getBoundingRectSize, isBrowser, isInIframe, resolveElementToObserve } from "~/common";
+import type { IframeChildInitEventData, IframeResizeEventData } from "./type";
 
 initializeChildListener();
+
+const resizeObserver: ResizeObserver | null = isBrowser() ? createResizeObserver() : null;
+let initialized = false;
 
 function initializeChildListener() {
   if (!isBrowser() || !isInIframe()) {
     return;
   }
 
-  deferWhenWindowIsLoaded(window, () => {
-    const resizeObserverCallback = () => {
-      const data: IframeResizeEventData = {
-        type: "iframe-resized",
-        width: document.documentElement.scrollWidth,
-        height: getBoundingRectHeight(document),
-      };
-      window.parent.postMessage(data, "*");
-    };
+  window.addEventListener("message", (event: MessageEvent) => {
+    if (event.data?.type === "iframe-child-init") {
+      deferWhenWindowDocumentIsLoaded(() => handleInitializeSignal(event));
+    }
+  });
+}
 
-    const resizeObserver = new ResizeObserver(resizeObserverCallback);
-    resizeObserver.observe(document.body);
+function handleInitializeSignal(event: MessageEvent<IframeChildInitEventData>) {
+  const { targetElementSelector, bodyPadding, bodyMargin } = event.data;
+  const elementToObserve = resolveElementToObserve(document, targetElementSelector);
+
+  if (initialized || window.parent !== event.source) {
+    return;
+  }
+
+  if (!elementToObserve) {
+    return setTimeout(() => handleInitializeSignal(event), 500);
+  }
+
+  if (bodyPadding) {
+    document.body.style.padding = bodyPadding;
+  }
+
+  if (bodyMargin) {
+    document.body.style.margin = bodyMargin;
+  }
+
+  resizeObserver?.disconnect();
+  resizeObserver?.observe(elementToObserve);
+  initialized = true;
+}
+
+function createResizeObserver() {
+  return new ResizeObserver((entries) => {
+    if (!entries[0].target) {
+      return;
+    }
+    const { height, width } = getBoundingRectSize(entries[0].target);
+
+    const data: IframeResizeEventData = {
+      type: "iframe-resized",
+      width,
+      height,
+    };
+    window.parent.postMessage(data, "*");
   });
 }
 

@@ -21,10 +21,18 @@ export function IframeResizer(props: Props) {
 }
 
 function filterProps(props: Props): { iframeAttributes: IframeHTMLAttributes<HTMLIFrameElement>; settings: Partial<Settings> } {
-  const { offsetSize, enableLegacyLibSupport, checkOrigin, onIframeResize, ...iframeAttributes } = props;
+  const { offsetSize, enableLegacyLibSupport, checkOrigin, onIframeResize, targetElementSelector, bodyMargin, bodyPadding, ...iframeAttributes } = props;
 
-  // biome-ignore lint/suspicious/noExplicitAny: Only here to provide key exhaustiveness
-  const settings: { [K in keyof Settings]: any } = { offsetSize, enableLegacyLibSupport, checkOrigin, onIframeResize };
+  // biome-ignore lint/suspicious/noExplicitAny: Compile fail if no key exhaustiveness
+  const settings: Required<{ [K in keyof Settings]: any }> = {
+    offsetSize,
+    enableLegacyLibSupport,
+    checkOrigin,
+    onIframeResize,
+    targetElementSelector,
+    bodyMargin,
+    bodyPadding,
+  };
 
   return { iframeAttributes, settings };
 }

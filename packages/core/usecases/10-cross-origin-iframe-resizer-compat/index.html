@@ -19,13 +19,11 @@
 
 <body>
 
-<script
-  src="/dist/index.umd.cjs"
-  type="text/javascript"
-></script>
+<script type="module">
+  import { initialize } from "/dist/index.js";
 
-<script>
-  window.iframeResizer.initialize({ enableLegacyLibSupport: true });
+  initialize({ enableLegacyLibSupport: true });
 </script>
+
 </body>
 </html>

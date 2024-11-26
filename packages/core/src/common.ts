@@ -6,14 +6,14 @@ export const isInIframe = () => window.self !== window.top;
 
 export const isHtmlIframeElement = (element: Element): element is HTMLIFrameElement => element instanceof HTMLIFrameElement;
 
-export const deferWhenWindowIsLoaded = (_window: Window, executable: () => void) => {
-  _window.document.readyState === "complete" ? executable() : _window.addEventListener("load", executable);
+export const deferWhenWindowDocumentIsLoaded = (executable: () => void) => {
+  window.document.readyState === "complete" ? executable() : window.addEventListener("load", executable);
 };
 
 /**
  * Post the message twice, it assures the target to receive the message at least once
  */
-export const safePostMessageToCrossOriginIframe = (iframe: HTMLIFrameElement, executable: () => void) => {
+export const postMessageSafelyToCrossOriginIframe = (iframe: HTMLIFrameElement, executable: () => void) => {
   executable();
   iframe.addEventListener("load", executable);
 };
@@ -50,7 +50,28 @@ export const removeUndefinedProperties = <T extends { [key: string]: unknown }>(
   return object;
 };
 
-export const getBoundingRectHeight = (document: Document) => {
-  const { height } = document.documentElement.getBoundingClientRect();
-  return Math.ceil(height);
+export const getBoundingRectSize = (element: Element) => {
+  const { height, width } = element.getBoundingClientRect();
+  return { height: Math.ceil(height), width: Math.ceil(width) };
+};
+
+export const resolveElementToObserve = (document: Document | null, targetElementSelector?: string) => {
+  if (!document) {
+    return null;
+  }
+  return targetElementSelector ? document.querySelector(targetElementSelector) : document.documentElement;
+};
+
+export const applyStyleSettings = (document: Document, styleSettings: { bodyMargin?: string; bodyPadding?: string }) => {
+  if (!document) {
+    return;
+  }
+
+  if (styleSettings.bodyPadding) {
+    document.body.style.padding = styleSettings.bodyPadding;
+  }
+
+  if (styleSettings.bodyMargin) {
+    document.body.style.margin = styleSettings.bodyMargin;
+  }
 };

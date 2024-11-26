@@ -1,7 +1,7 @@
 {
 	"name": "@open-iframe-resizer/core",
 	"private": false,
-	"version": "1.2.1",
+	"version": "1.3.0",
 	"description": "Open-source modern iframe resizer",
 	"license": "MIT",
 	"repository": {
@@ -46,8 +46,5 @@
 		"test:e2e": "npx playwright install --with-deps && npx playwright test",
 		"test:unit": "vitest run",
 		"prepare": "copyfiles -V ../../README.md packages/core"
-	},
-	"devDependencies": {
-		"@microsoft/tsdoc": "^0.15.0"
 	}
 }

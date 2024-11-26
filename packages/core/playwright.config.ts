@@ -22,8 +22,10 @@ export default defineConfig({
   /* Opt out of parallel e2e on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: "html",
+  reporter: [["html", { open: "never" }]],
   timeout: 25000,
+  snapshotPathTemplate: "{testDir}/__screenshots__/{testFileName}/{platform}/{arg}-{projectName}{ext}",
+
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     baseURL: "http://localhost:5550",

@@ -1,0 +1,4 @@
+- Allow iframe scroll hide
+- Test lazy iframes attribute
+- Coverage for e2e tests
+- Improve origin checks
