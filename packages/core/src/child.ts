@@ -1,4 +1,4 @@
-import { deferWhenWindowDocumentIsLoaded, getBoundingRectSize, isBrowser, isInIframe, resolveElementToObserve } from "~/common";
+import { applyStyleSettings, deferWhenWindowDocumentIsLoaded, getBoundingRectSize, isBrowser, isInIframe, resolveElementToObserve } from "~/common";
 import type { IframeChildInitEventData, IframeResizeEventData } from "./type";
 
 const getResizeObserverInstance = createResizerObserverLazyFactory();
@@ -32,17 +32,11 @@ function handleInitializeSignal(event: MessageEvent<IframeChildInitEventData>) {
     return setTimeout(() => handleInitializeSignal(event), 500);
   }
 
-  if (bodyPadding) {
-    document.body.style.padding = bodyPadding;
-  }
-
-  if (bodyMargin) {
-    document.body.style.margin = bodyMargin;
-  }
+  applyStyleSettings(document, { bodyMargin, bodyPadding });
 
   const resizeObserver = getResizeObserverInstance();
-  resizeObserver?.disconnect();
-  resizeObserver?.observe(elementToObserve);
+  resizeObserver.disconnect();
+  resizeObserver.observe(elementToObserve);
   initialized = true;
 }
 
