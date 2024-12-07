@@ -2,6 +2,7 @@
   "name": "open-iframe-resizer",
   "private": true,
   "scripts": {
+    "full": "npm run build && npm run test",
     "build": "npm run build --workspaces",
     "dev": "npm run dev --workspaces",
     "test": "npm run test --workspaces",

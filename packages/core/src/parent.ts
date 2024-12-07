@@ -14,7 +14,7 @@ import {
 import { getLegacyLibInitMessage, handleLegacyLibResizeMessage } from "~/compat";
 import type { IframeChildInitEventData, IframeResizeEvent, InitializeFunction, RegisteredElement, ResizeContext, Settings } from "./type";
 
-const resizeObserver: ResizeObserver | null = isBrowser() ? createResizeObserver() : null;
+const getResizeObserverInstance = createResizerObserverLazyFactory();
 let registeredElements: Array<RegisteredElement> = [];
 
 const initialize: InitializeFunction = (clientSettings, selector) => {
@@ -143,7 +143,7 @@ function addSameOriginChildResizeListener(registeredElement: RegisteredElement) 
     }
 
     applyStyleSettings(iframe.contentDocument, settings);
-    resizeObserver?.observe(elementToObserve);
+    getResizeObserverInstance().observe(elementToObserve);
   };
 
   deferWhenSameOriginIframeIsLoaded(iframe, initialize);
@@ -151,7 +151,7 @@ function addSameOriginChildResizeListener(registeredElement: RegisteredElement) 
   return () => {
     const elementToObserve = resolveElementToObserve(iframe.contentDocument, targetElementSelector);
     if (elementToObserve) {
-      resizeObserver?.unobserve(elementToObserve);
+      getResizeObserverInstance().unobserve(elementToObserve);
     }
     iframe.removeEventListener("load", initialize);
   };
@@ -175,27 +175,35 @@ function addInteractionListeners({ iframe, interactionState }: RegisteredElement
   };
 }
 
-function createResizeObserver() {
-  const handleEntry = ({ target }: ResizeObserverEntry) => {
-    const matchingRegisteredElement = registeredElements.find(({ iframe }) => iframe.contentDocument === target.ownerDocument);
-    if (!matchingRegisteredElement) {
-      return;
+function createResizerObserverLazyFactory() {
+  let resizeObserver: ResizeObserver | null = null;
+
+  return () => {
+    if (!resizeObserver) {
+      const handleEntry = ({ target }: ResizeObserverEntry) => {
+        const matchingRegisteredElement = registeredElements.find(({ iframe }) => iframe.contentDocument === target.ownerDocument);
+        if (!matchingRegisteredElement) {
+          return;
+        }
+
+        const { iframe, settings } = matchingRegisteredElement;
+        const observedElement = resolveElementToObserve(iframe.contentDocument, settings.targetElementSelector);
+        if (!observedElement) {
+          return;
+        }
+
+        const { height } = getBoundingRectSize(observedElement);
+        if (!height) {
+          return;
+        }
+        resizeIframe({ newHeight: height, registeredElement: matchingRegisteredElement });
+      };
+
+      resizeObserver = new ResizeObserver((entries) => entries.forEach(handleEntry));
     }
 
-    const { iframe, settings } = matchingRegisteredElement;
-    const observedElement = resolveElementToObserve(iframe.contentDocument, settings.targetElementSelector);
-    if (!observedElement) {
-      return;
-    }
-
-    const { height } = getBoundingRectSize(observedElement);
-    if (!height) {
-      return;
-    }
-    resizeIframe({ newHeight: height, registeredElement: matchingRegisteredElement });
+    return resizeObserver;
   };
-
-  return new ResizeObserver((entries) => entries.forEach(handleEntry));
 }
 
 function resizeIframe({ registeredElement, newHeight }: { registeredElement: RegisteredElement; newHeight: number }) {

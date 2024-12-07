@@ -1,10 +1,10 @@
 import { deferWhenWindowDocumentIsLoaded, getBoundingRectSize, isBrowser, isInIframe, resolveElementToObserve } from "~/common";
 import type { IframeChildInitEventData, IframeResizeEventData } from "./type";
 
-initializeChildListener();
-
-const resizeObserver: ResizeObserver | null = isBrowser() ? createResizeObserver() : null;
+const getResizeObserverInstance = createResizerObserverLazyFactory();
 let initialized = false;
+
+initializeChildListener();
 
 function initializeChildListener() {
   if (!isBrowser() || !isInIframe()) {
@@ -12,9 +12,11 @@ function initializeChildListener() {
   }
 
   window.addEventListener("message", (event: MessageEvent) => {
-    if (event.data?.type === "iframe-child-init") {
-      deferWhenWindowDocumentIsLoaded(() => handleInitializeSignal(event));
+    if (event.data?.type !== "iframe-child-init") {
+      return;
     }
+
+    deferWhenWindowDocumentIsLoaded(() => handleInitializeSignal(event));
   });
 }
 
@@ -38,25 +40,33 @@ function handleInitializeSignal(event: MessageEvent<IframeChildInitEventData>) {
     document.body.style.margin = bodyMargin;
   }
 
+  const resizeObserver = getResizeObserverInstance();
   resizeObserver?.disconnect();
   resizeObserver?.observe(elementToObserve);
   initialized = true;
 }
 
-function createResizeObserver() {
-  return new ResizeObserver((entries) => {
-    if (!entries[0].target) {
-      return;
-    }
-    const { height, width } = getBoundingRectSize(entries[0].target);
+function createResizerObserverLazyFactory() {
+  let resizeObserver: ResizeObserver | null = null;
 
-    const data: IframeResizeEventData = {
-      type: "iframe-resized",
-      width,
-      height,
-    };
-    window.parent.postMessage(data, "*");
-  });
+  return () => {
+    if (!resizeObserver) {
+      resizeObserver = new ResizeObserver((entries) => {
+        if (!entries[0].target) {
+          return;
+        }
+        const { height, width } = getBoundingRectSize(entries[0].target);
+
+        const data: IframeResizeEventData = {
+          type: "iframe-resized",
+          width,
+          height,
+        };
+        window.parent.postMessage(data, "*");
+      });
+    }
+    return resizeObserver;
+  };
 }
 
 export { initializeChildListener };
