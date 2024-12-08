@@ -4,8 +4,8 @@ test("Should resize the cross origin iframe with a custom target element selecto
   await page.goto("/usecases/15-cross-origin-target-element-selector/index.html");
 
   await expect(page.locator("#myIframe").contentFrame().getByText("Loading")).toBeVisible();
-  await expect(page).toHaveScreenshot("01-loading.png");
+  await expect(page).toHaveScreenshot("01-loading.png", { maxDiffPixelRatio: 0.01 });
 
   await expect(page.locator("#myIframe").contentFrame().getByText("Loading")).not.toBeVisible();
-  await expect(page).toHaveScreenshot("02-loaded.png");
+  await expect(page).toHaveScreenshot("02-loaded.png", { maxDiffPixelRatio: 0.01 });
 });

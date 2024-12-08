@@ -2,5 +2,5 @@
 - Test lazy iframes attribute
 - Coverage for e2e tests
 - Improve origin checks
-- Try to normalize CSS to reduce screenshots platform coupling
+- Try to normalize CSS to reduce screenshots platform coupling (and remove max ratio match)
 - Improve scroll Function for mobile
