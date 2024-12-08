@@ -75,3 +75,15 @@ export const applyStyleSettings = (document: Document, styleSettings: { bodyMarg
     document.body.style.margin = styleSettings.bodyMargin;
   }
 };
+
+export const getExponentialBackoffDelay = (nthRetry: number) => {
+  if (nthRetry <= 100) {
+    return 100; // for 10 seconds
+  }
+
+  if (nthRetry <= 120) {
+    return 1000; // for 20 seconds
+  }
+
+  return 10000;
+};

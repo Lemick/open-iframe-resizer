@@ -4,6 +4,7 @@ import {
   extractIframeOrigin,
   getBoundingRectSize,
   getDefaultSettings,
+  getExponentialBackoffDelay,
   isBrowser,
   isHtmlIframeElement,
   isIframeSameOrigin,
@@ -30,7 +31,7 @@ const initialize: InitializeFunction = (clientSettings, selector) => {
       iframe,
       settings: finalSettings,
       interactionState: { isHovered: false },
-      initContext: { hasReceivedResizedMessage: false, retryAttempts: 0 },
+      initContext: { isInitialized: false, retryAttempts: 0 },
     };
     const unsubscribe = addChildResizeListener(registeredElement, allowedOrigins);
     registeredElements.push(registeredElement);
@@ -123,7 +124,7 @@ function addCrossOriginChildResizeListener(registeredElement: RegisteredElement,
   const sendInitializationMessageToChild = () => {
     postMessageSafelyToCrossOriginIframe(iframe, () => iframe.contentWindow?.postMessage(initMessage, "*"));
     initContext.retryAttempts++;
-    initContext.retryTimeoutId = window.setTimeout(sendInitializationMessageToChild, calculateNextRetryDelay(initContext.retryAttempts));
+    initContext.retryTimeoutId = window.setTimeout(sendInitializationMessageToChild, getExponentialBackoffDelay(initContext.retryAttempts));
   };
 
   sendInitializationMessageToChild();
@@ -134,12 +135,14 @@ function addCrossOriginChildResizeListener(registeredElement: RegisteredElement,
 function addSameOriginChildResizeListener(registeredElement: RegisteredElement) {
   const { iframe, settings } = registeredElement;
   const { targetElementSelector } = settings;
+  let nthRetry = 0;
 
   const initialize = () => {
     const elementToObserve = resolveElementToObserve(iframe.contentDocument, targetElementSelector);
 
     if (!iframe.contentDocument || !elementToObserve) {
-      return setTimeout(initialize, 500);
+      nthRetry++;
+      return setTimeout(initialize, getExponentialBackoffDelay(nthRetry));
     }
 
     applyStyleSettings(iframe.contentDocument, settings);
@@ -209,8 +212,8 @@ function createResizerObserverLazyFactory() {
 function resizeIframe({ registeredElement, newHeight }: { registeredElement: RegisteredElement; newHeight: number }) {
   const { iframe, settings, interactionState, initContext } = registeredElement;
 
-  if (!initContext.hasReceivedResizedMessage) {
-    initContext.hasReceivedResizedMessage = true;
+  if (!initContext.isInitialized) {
+    initContext.isInitialized = true;
     clearTimeout(initContext.retryTimeoutId);
   }
 
@@ -230,18 +233,6 @@ function resizeIframe({ registeredElement, newHeight }: { registeredElement: Reg
     nextRenderState: { rect: iframe.getBoundingClientRect() },
   };
   settings.onIframeResize(resizeContext);
-}
-
-function calculateNextRetryDelay(nthRetry: number) {
-  if (nthRetry <= 100) {
-    return 40; // 40 ms for 4 seconds
-  }
-
-  if (nthRetry <= 160) {
-    return 100; // 100 ms for 6 seconds
-  }
-
-  return 1000;
 }
 
 export { initialize };

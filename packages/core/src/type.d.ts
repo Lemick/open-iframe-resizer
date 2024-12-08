@@ -94,5 +94,5 @@ export type RegisteredElement = {
   iframe: HTMLIFrameElement;
   settings: Settings;
   interactionState: InteractionState;
-  initContext: { hasReceivedResizedMessage: boolean; retryAttempts: number; retryTimeoutId?: number };
+  initContext: { isInitialized: boolean; retryAttempts: number; retryTimeoutId?: number };
 };

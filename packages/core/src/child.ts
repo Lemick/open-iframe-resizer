@@ -1,4 +1,12 @@
-import { applyStyleSettings, deferWhenWindowDocumentIsLoaded, getBoundingRectSize, isBrowser, isInIframe, resolveElementToObserve } from "~/common";
+import {
+  applyStyleSettings,
+  deferWhenWindowDocumentIsLoaded,
+  getBoundingRectSize,
+  getExponentialBackoffDelay,
+  isBrowser,
+  isInIframe,
+  resolveElementToObserve,
+} from "~/common";
 import type { IframeChildInitEventData, IframeResizeEventData } from "./type";
 
 const getResizeObserverInstance = createResizerObserverLazyFactory();
@@ -20,7 +28,7 @@ function initializeChildListener() {
   });
 }
 
-function handleInitializeSignal(event: MessageEvent<IframeChildInitEventData>) {
+function handleInitializeSignal(event: MessageEvent<IframeChildInitEventData>, nthRetry = 0) {
   const { targetElementSelector, bodyPadding, bodyMargin } = event.data;
   const elementToObserve = resolveElementToObserve(document, targetElementSelector);
 
@@ -29,7 +37,7 @@ function handleInitializeSignal(event: MessageEvent<IframeChildInitEventData>) {
   }
 
   if (!elementToObserve) {
-    return setTimeout(() => handleInitializeSignal(event), 500);
+    return setTimeout(() => handleInitializeSignal(event, nthRetry + 1), getExponentialBackoffDelay(nthRetry));
   }
 
   applyStyleSettings(document, { bodyMargin, bodyPadding });
