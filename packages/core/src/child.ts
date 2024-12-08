@@ -1,5 +1,16 @@
-import { deferWhenWindowIsLoaded, getBoundingRectHeight, isBrowser, isInIframe } from "~/common";
-import type { IframeResizeEventData } from "./type";
+import {
+  applyStyleSettings,
+  deferWhenWindowDocumentIsLoaded,
+  getBoundingRectSize,
+  getExponentialBackoffDelay,
+  isBrowser,
+  isInIframe,
+  resolveElementToObserve,
+} from "~/common";
+import type { IframeChildInitEventData, IframeResizeEventData } from "./type";
+
+const getResizeObserverInstance = createResizerObserverLazyFactory();
+let initialized = false;
 
 initializeChildListener();
 
@@ -8,19 +19,56 @@ function initializeChildListener() {
     return;
   }
 
-  deferWhenWindowIsLoaded(window, () => {
-    const resizeObserverCallback = () => {
-      const data: IframeResizeEventData = {
-        type: "iframe-resized",
-        width: document.documentElement.scrollWidth,
-        height: getBoundingRectHeight(document),
-      };
-      window.parent.postMessage(data, "*");
-    };
+  window.addEventListener("message", (event: MessageEvent) => {
+    if (event.data?.type !== "iframe-child-init") {
+      return;
+    }
 
-    const resizeObserver = new ResizeObserver(resizeObserverCallback);
-    resizeObserver.observe(document.body);
+    deferWhenWindowDocumentIsLoaded(() => handleInitializeSignal(event));
   });
+}
+
+function handleInitializeSignal(event: MessageEvent<IframeChildInitEventData>, nthRetry = 0) {
+  const { targetElementSelector, bodyPadding, bodyMargin } = event.data;
+  const elementToObserve = resolveElementToObserve(document, targetElementSelector);
+
+  if (initialized || window.parent !== event.source) {
+    return;
+  }
+
+  if (!elementToObserve) {
+    return setTimeout(() => handleInitializeSignal(event, nthRetry + 1), getExponentialBackoffDelay(nthRetry));
+  }
+
+  applyStyleSettings(document, { bodyMargin, bodyPadding });
+
+  const resizeObserver = getResizeObserverInstance();
+  resizeObserver.disconnect();
+  resizeObserver.observe(elementToObserve);
+  initialized = true;
+}
+
+function createResizerObserverLazyFactory() {
+  let resizeObserver: ResizeObserver | null = null;
+
+  return () => {
+    if (!resizeObserver) {
+      resizeObserver = new ResizeObserver((entries) => {
+        if (!entries[0].target) {
+          return;
+        }
+        const { height, width } = getBoundingRectSize(entries[0].target);
+
+        const data: IframeResizeEventData = {
+          type: "iframe-resized",
+          width,
+          height,
+        };
+        window.parent.postMessage(data, "*");
+      });
+    }
+    return resizeObserver;
+  };
 }
 
 export { initializeChildListener };

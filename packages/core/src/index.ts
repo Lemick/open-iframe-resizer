@@ -1,4 +1,4 @@
 export * from "./parent";
 export * from "./child";
-export * from "./resize-handlers";
+export * from "./api-resize-handlers";
 export type * from "./type";

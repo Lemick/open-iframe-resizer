@@ -37,5 +37,5 @@ jobs:
           name: playwright-report
           path: |
             packages/core/playwright-report/
-            packages/core/e2e/usecases.spec.ts-snapshots/
+            packages/core/e2e/__screenshots__/
           retention-days: 7

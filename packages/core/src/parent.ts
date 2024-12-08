@@ -1,19 +1,21 @@
 import {
+  applyStyleSettings,
   deferWhenSameOriginIframeIsLoaded,
   extractIframeOrigin,
-  getBoundingRectHeight,
+  getBoundingRectSize,
   getDefaultSettings,
+  getExponentialBackoffDelay,
   isBrowser,
   isHtmlIframeElement,
   isIframeSameOrigin,
+  postMessageSafelyToCrossOriginIframe,
   removeUndefinedProperties,
+  resolveElementToObserve,
 } from "~/common";
-import { handleLegacyLibResizeMessage, sendLegacyLibInitMessageOnIframeLoad } from "~/compat";
-import type { IframeResizeEvent, InitializeFunction, InteractionState, ResizeContext, Settings } from "./type";
+import { getLegacyLibInitMessage, handleLegacyLibResizeMessage } from "~/compat";
+import type { IframeChildInitEventData, IframeResizeEvent, InitializeFunction, RegisteredElement, ResizeContext, Settings } from "./type";
 
-type RegisteredElement = { iframe: HTMLIFrameElement; settings: Settings; interactionState: InteractionState };
-
-const resizeObserver: ResizeObserver | null = isBrowser() ? createResizeObserver() : null;
+const getResizeObserverInstance = createResizerObserverLazyFactory();
 let registeredElements: Array<RegisteredElement> = [];
 
 const initialize: InitializeFunction = (clientSettings, selector) => {
@@ -25,7 +27,12 @@ const initialize: InitializeFunction = (clientSettings, selector) => {
   const allowedOrigins = registerIframesAllowOrigins(finalSettings, iframes);
 
   return iframes.map((iframe) => {
-    const registeredElement: RegisteredElement = { iframe, settings: finalSettings, interactionState: { isHovered: false } };
+    const registeredElement: RegisteredElement = {
+      iframe,
+      settings: finalSettings,
+      interactionState: { isHovered: false },
+      initContext: { isInitialized: false, retryAttempts: 0 },
+    };
     const unsubscribe = addChildResizeListener(registeredElement, allowedOrigins);
     registeredElements.push(registeredElement);
 
@@ -81,9 +88,14 @@ function addChildResizeListener(registeredElement: RegisteredElement, allowedOri
 }
 
 function addCrossOriginChildResizeListener(registeredElement: RegisteredElement, allowedOrigins: string[]) {
-  const { iframe, settings } = registeredElement;
+  const {
+    iframe,
+    initContext,
+    settings: { checkOrigin, enableLegacyLibSupport, targetElementSelector, bodyPadding, bodyMargin },
+  } = registeredElement;
+
   const handleIframeResizedMessage = (event: MessageEvent) => {
-    const isOriginValid = !settings.checkOrigin || allowedOrigins.includes(event.origin);
+    const isOriginValid = !checkOrigin || allowedOrigins.includes(event.origin);
     const isIframeTarget = iframe.contentWindow === event.source;
 
     if (!isIframeTarget || !isOriginValid) {
@@ -96,7 +108,7 @@ function addCrossOriginChildResizeListener(registeredElement: RegisteredElement,
       return;
     }
 
-    if (settings.enableLegacyLibSupport) {
+    if (enableLegacyLibSupport) {
       const height = handleLegacyLibResizeMessage(event);
       height !== null && resizeIframe({ newHeight: height, registeredElement });
       return;
@@ -105,29 +117,46 @@ function addCrossOriginChildResizeListener(registeredElement: RegisteredElement,
 
   window.addEventListener("message", handleIframeResizedMessage);
 
-  if (settings.enableLegacyLibSupport) {
-    sendLegacyLibInitMessageOnIframeLoad(iframe);
-  }
+  const initMessage: string | IframeChildInitEventData = enableLegacyLibSupport
+    ? getLegacyLibInitMessage()
+    : { type: "iframe-child-init", targetElementSelector, bodyPadding, bodyMargin };
+
+  const sendInitializationMessageToChild = () => {
+    postMessageSafelyToCrossOriginIframe(iframe, () => iframe.contentWindow?.postMessage(initMessage, "*"));
+    initContext.retryAttempts++;
+    initContext.retryTimeoutId = window.setTimeout(sendInitializationMessageToChild, getExponentialBackoffDelay(initContext.retryAttempts));
+  };
+
+  sendInitializationMessageToChild();
 
   return () => window.removeEventListener("message", handleIframeResizedMessage);
 }
 
-function addSameOriginChildResizeListener({ iframe }: RegisteredElement) {
-  const startListener = () => {
-    const contentBody = iframe.contentDocument?.body;
-    if (!contentBody) {
-      return;
+function addSameOriginChildResizeListener(registeredElement: RegisteredElement) {
+  const { iframe, settings } = registeredElement;
+  const { targetElementSelector } = settings;
+  let nthRetry = 0;
+
+  const initialize = () => {
+    const elementToObserve = resolveElementToObserve(iframe.contentDocument, targetElementSelector);
+
+    if (!iframe.contentDocument || !elementToObserve) {
+      nthRetry++;
+      return setTimeout(initialize, getExponentialBackoffDelay(nthRetry));
     }
-    resizeObserver?.observe(contentBody);
+
+    applyStyleSettings(iframe.contentDocument, settings);
+    getResizeObserverInstance().observe(elementToObserve);
   };
 
-  deferWhenSameOriginIframeIsLoaded(iframe, startListener);
+  deferWhenSameOriginIframeIsLoaded(iframe, initialize);
 
   return () => {
-    if (iframe.contentDocument?.body) {
-      resizeObserver?.unobserve(iframe.contentDocument.body);
+    const elementToObserve = resolveElementToObserve(iframe.contentDocument, targetElementSelector);
+    if (elementToObserve) {
+      getResizeObserverInstance().unobserve(elementToObserve);
     }
-    iframe.removeEventListener("load", startListener);
+    iframe.removeEventListener("load", initialize);
   };
 }
 
@@ -149,28 +178,44 @@ function addInteractionListeners({ iframe, interactionState }: RegisteredElement
   };
 }
 
-function createResizeObserver() {
-  const handleEntry = ({ target }: ResizeObserverEntry) => {
-    const matchingRegisteredElement = registeredElements.find((value) => value.iframe.contentDocument?.body === target);
-    if (!matchingRegisteredElement) {
-      return;
-    }
-    const { iframe } = matchingRegisteredElement;
-    if (!iframe.contentDocument) {
-      return;
-    }
-    const height = getBoundingRectHeight(iframe.contentDocument);
-    if (!height) {
-      return;
-    }
-    resizeIframe({ newHeight: height, registeredElement: matchingRegisteredElement });
-  };
+function createResizerObserverLazyFactory() {
+  let resizeObserver: ResizeObserver | null = null;
 
-  return new ResizeObserver((entries) => entries.forEach(handleEntry));
+  return () => {
+    if (!resizeObserver) {
+      const handleEntry = ({ target }: ResizeObserverEntry) => {
+        const matchingRegisteredElement = registeredElements.find(({ iframe }) => iframe.contentDocument === target.ownerDocument);
+        if (!matchingRegisteredElement) {
+          return;
+        }
+
+        const { iframe, settings } = matchingRegisteredElement;
+        const observedElement = resolveElementToObserve(iframe.contentDocument, settings.targetElementSelector);
+        if (!observedElement) {
+          return;
+        }
+
+        const { height } = getBoundingRectSize(observedElement);
+        if (!height) {
+          return;
+        }
+        resizeIframe({ newHeight: height, registeredElement: matchingRegisteredElement });
+      };
+
+      resizeObserver = new ResizeObserver((entries) => entries.forEach(handleEntry));
+    }
+
+    return resizeObserver;
+  };
 }
 
 function resizeIframe({ registeredElement, newHeight }: { registeredElement: RegisteredElement; newHeight: number }) {
-  const { iframe, settings, interactionState } = registeredElement;
+  const { iframe, settings, interactionState, initContext } = registeredElement;
+
+  if (!initContext.isInitialized) {
+    initContext.isInitialized = true;
+    clearTimeout(initContext.retryTimeoutId);
+  }
 
   const previousBoundingRect = iframe.getBoundingClientRect();
   const newCalculatedHeight = newHeight + settings.offsetSize;

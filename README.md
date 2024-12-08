@@ -8,7 +8,7 @@
 
 A modern, lightweight alternative for resizing iframes dynamically. It is shipped under the MIT license, making it usable in commercial projects.
 
-If you found this plugin helpful, please consider starring the repository!
+If you found this project helpful, please consider starring the repository!
 
 ## Getting Started
 

@@ -31,6 +31,28 @@ export type Settings = {
    */
   enableLegacyLibSupport: boolean;
   /**
+   * By default, the root element observed for resizing is the <html> document.
+   * In more complex layouts, the scrolling container may be elsewhere.
+   * This setting allows you to customize the root element that should be observed for resize events.
+   *
+   * Default: `undefined`
+   */
+  targetElementSelector?: string;
+
+  /**
+   * Customize the padding style of the iframe body.
+   *
+   * Default: `undefined`
+   */
+  bodyPadding?: string;
+
+  /**
+   * Customize the margin style of the iframe body.
+   *
+   * Default: `undefined`
+   */
+  bodyMargin?: string;
+  /**
    * Listener that is called after the iframe has been resized.
    * You can use a predefined handler like `updateParentScrollOnResize` or create your own custom handler.
    *
@@ -43,6 +65,13 @@ export type IframeResizeEventData = {
   type: "iframe-resized";
   width: number;
   height?: number;
+};
+
+export type IframeChildInitEventData = {
+  type: "iframe-child-init";
+  targetElementSelector?: string;
+  bodyPadding?: string;
+  bodyMargin?: string;
 };
 
 export type IframeResizeEvent = MessageEvent<IframeResizeEventData>;
@@ -59,4 +88,11 @@ export type ResizeContext = {
   interactionState: InteractionState;
   previousRenderState: ResizeRenderState;
   nextRenderState: ResizeRenderState;
+};
+
+export type RegisteredElement = {
+  iframe: HTMLIFrameElement;
+  settings: Settings;
+  interactionState: InteractionState;
+  initContext: { isInitialized: boolean; retryAttempts: number; retryTimeoutId?: number };
 };

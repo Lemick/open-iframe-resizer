@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iframe Resize Example</title>
+  <style>
+      body {
+          display: flex;
+          gap: 32px;
+          flex-direction: column;
+          align-items: center;
+      }
+
+      iframe {
+          border: 2px dotted red;
+          width: 1000px;
+      }
+  </style>
+</head>
+<body>
+<iframe id="myIframe" src="http://localhost:5551/usecases/15-cross-origin-target-element-selector/iframe-content.html"></iframe>
+</body>
+
+<script type="module">
+  import { initialize } from "/dist/index.js";
+
+  initialize({ targetElementSelector: ".root", bodyMargin: "0" });
+</script>
+
+
+</html>
