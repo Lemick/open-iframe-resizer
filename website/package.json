@@ -4,11 +4,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build --config astro.config.prod.mjs",
-    "preview": "astro preview",
-    "astro": "astro"
+    "dev": "astro dev --config astro.config.dev.mjs",
+    "build": "astro build",
+    "preview": "astro preview"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.29.2",

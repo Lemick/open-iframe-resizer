@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
-import starlight from '@astrojs/starlight';
+import starlight from "@astrojs/starlight";
 
-export const defaultConfig = {
+export const commonConfig = {
 	integrations: [
 		starlight({
 			title: 'Open Iframe Resizer',
@@ -26,5 +26,10 @@ export const defaultConfig = {
 	],
 }
 
+
 // https://astro.build/config
-export default defineConfig(defaultConfig);
+export default defineConfig({
+	site: 'https://lemick.github.io',
+	base: 'open-iframe-resizer',
+	...commonConfig
+});
