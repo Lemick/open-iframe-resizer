@@ -22,7 +22,7 @@ test("Should resize an Iframe with the React component when the child iframe onl
   await page.waitForFunction(allIframesHasBeenResized);
 });
 
-test("Should resize an Iframe with the React component with a cross origin child", async ({ page }) => {
+test("Should resize an Iframe with the React component with a cross-origin child", async ({ page }) => {
   await page.goto("/usecases/03-cross-origin-iframe/index.html");
 
   await page.getByRole("button", { name: "Mount IFrame" }).click();
