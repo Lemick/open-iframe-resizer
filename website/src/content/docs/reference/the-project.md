@@ -12,6 +12,13 @@ I wanted to offer a modern alternative: focused on simplicity and efficiency.
 - I try to keep the API as close as possible to the original library to ease migration, though some features will not be implemented the same way.
 - Unified packaging: For simplicity, both the child and parent packages are included in the same module.
 
+## Browser support
+
+| Chrome | Safari | Firefox | Opera | IE    |
+|--------|--------|---------|-------|-------|
+| 64+    | 13.1+  | 69+     | 51+   | 🙅‍♂️ |
+
+
 ## Contributing
 You can create issues on Github if you encounter any problems, you can also propose new features to integrate. 
 

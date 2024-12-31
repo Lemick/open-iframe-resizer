@@ -29,7 +29,7 @@ initialize({
 const results = initialize();
 
 // You can later untrack these iframes
-results.foreach(result => result.unsubscribe());
+results.forEach(result => result.unsubscribe());
 ```
 --- 
 ## Settings
@@ -76,7 +76,7 @@ Below is a detailed description of each property:
 
 ### `onIframeResize`
 
-- **Type**: `(context: ResizeContext) => void | undefined`
+- **Type**: `(context: ResizeContext) => void`
 - **Description**: Listener that is called after the iframe has been resized. You can use a predefined handler like `updateParentScrollOnResize` create your own custom handler.
 - **Default**: `undefined`
 
