@@ -8,7 +8,10 @@ export const commonConfig = {
       social: {
         github: "https://github.com/Lemick/open-iframe-resizer",
       },
-      head: [{ tag: "script", attrs: { src: "//gc.zgo.at/count.js", defer: "true", "data-goatcounter": "https://open-iframe-resizer.goatcounter.com/count" } }],
+      head: [
+        { tag: "script", attrs: { src: "//gc.zgo.at/count.js", defer: "true", "data-goatcounter": "https://open-iframe-resizer.goatcounter.com/count" } },
+        { tag: "meta", attrs: { name: "google-site-verification", content: "8FoOLQ6IEjarQF4kcRiSxY07aDfoVvATd4pLIe0fIS0" } },
+      ],
       sidebar: [
         {
           label: "Guides",
