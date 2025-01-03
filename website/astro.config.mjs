@@ -34,6 +34,6 @@ export const commonConfig = {
 // https://astro.build/config
 export default defineConfig({
   site: "https://lemick.github.io",
-  base: "open-iframe-resizer",
+  base: "/open-iframe-resizer/",
   ...commonConfig,
 });
