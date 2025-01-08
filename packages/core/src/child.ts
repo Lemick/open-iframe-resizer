@@ -1,7 +1,7 @@
 import {
   applyStyleSettings,
   deferWhenWindowDocumentIsLoaded,
-  getBoundingRectSize,
+  getElementIdealDimensions,
   getExponentialBackoffDelay,
   isBrowser,
   isInIframe,
@@ -57,7 +57,7 @@ function createResizerObserverLazyFactory() {
         if (!entries[0].target) {
           return;
         }
-        const { height, width } = getBoundingRectSize(entries[0].target);
+        const { height, width } = getElementIdealDimensions(entries[0].target);
 
         const data: IframeResizeEventData = {
           type: "iframe-resized",

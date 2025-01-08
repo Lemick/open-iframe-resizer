@@ -2,8 +2,8 @@ import {
   applyStyleSettings,
   deferWhenSameOriginIframeIsLoaded,
   extractIframeOrigin,
-  getBoundingRectSize,
   getDefaultSettings,
+  getElementIdealDimensions,
   getExponentialBackoffDelay,
   isBrowser,
   isHtmlIframeElement,
@@ -195,7 +195,7 @@ function createResizerObserverLazyFactory() {
           return;
         }
 
-        const { height } = getBoundingRectSize(observedElement);
+        const { height } = getElementIdealDimensions(observedElement);
         if (!height) {
           return;
         }

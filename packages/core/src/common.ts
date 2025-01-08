@@ -50,9 +50,19 @@ export const removeUndefinedProperties = <T extends { [key: string]: unknown }>(
   return object;
 };
 
-export const getBoundingRectSize = (element: Element) => {
-  const { height, width } = element.getBoundingClientRect();
-  return { height: Math.ceil(height), width: Math.ceil(width) };
+export const getElementIdealDimensions = (element: Element) => {
+  const boundingClientRect = element.getBoundingClientRect();
+  const hasVerticalScrollbar = element.scrollHeight > element.clientHeight;
+
+  if (hasVerticalScrollbar) {
+    // When element is growing, we may take the scrollHeight as bounding rect may only return the visible height
+    return {
+      height: Math.max(Math.ceil(boundingClientRect.height), element.scrollHeight),
+      width: Math.max(Math.ceil(boundingClientRect.width), element.scrollWidth),
+    };
+  }
+
+  return { height: Math.ceil(boundingClientRect.height), width: Math.ceil(boundingClientRect.width) };
 };
 
 export const resolveElementToObserve = (document: Document | null, targetElementSelector?: string) => {
