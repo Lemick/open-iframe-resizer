@@ -45,19 +45,14 @@
 		"test": "npx playwright install --with-deps && npx playwright test"
 	},
 	"devDependencies": {
-		"@babel/core": "^7.26.0",
 		"@open-iframe-resizer/core": "1.4.0",
 		"@testing-library/react": "^16.1.0",
 		"@types/react": "^19.0.1",
-		"@types/react-dom": "18.3.2",
-		"@vitejs/plugin-react": "4.3.4",
-		"autoprefixer": "10.4.20",
-		"babel-loader": "9.2.1",
+		"@types/react-dom": "^19.1.2",
+		"@vitejs/plugin-react": "^4.4.1",
 		"jsdom": "25.0.1",
-		"json": "11.0.0",
-		"prop-types": "^15.8.1",
-		"react": "^19.0.0",
-		"react-dom": "^19.0.0"
+		"react": "^19.1.0",
+		"react-dom": "^19.1.0"
 	},
 	"peerDependencies": {
 		"react": ">=17.0.0",
