@@ -35,10 +35,14 @@ npm install @open-iframe-resizer/core
 
 ### React
 
-A React component is also available:
-
 ```bash
 npm install @open-iframe-resizer/react
+```
+
+### Vue
+
+```bash
+npm install @open-iframe-resizer/vue
 ```
 
 ## Full documentation
