@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-const DIR_PATH =  ["./packages/core/usecases", "./packages/react/usecases"];
+const DIR_PATH =  ["./packages/core/usecases", "./packages/react/usecases","./packages/vue/usecases"];
 
 /**
  * Used to generate the /usecases/root.html file
