@@ -1,45 +1,64 @@
 <template>
-  <iframe ref="iframe-ref" v-bind="$attrs"></iframe>
+  <iframe ref="iframeRef" v-bind="$attrs"></iframe>
 </template>
 
-<script setup lang="ts">
-import { onBeforeUnmount, onMounted, useTemplateRef } from "vue";
+<script lang="ts">
+import { defineComponent, onMounted, onBeforeUnmount, ref, type PropType } from "vue";
 import { initialize, type InitializeResult, type Settings } from "@open-iframe-resizer/core";
 
-const props = defineProps<Partial<Settings>>();
+type Props = Partial<Settings>;
 
-const iframeRef = useTemplateRef<HTMLIFrameElement | null>("iframe-ref");
-let cleanupFunctions: InitializeResult[] = [];
+export default defineComponent(<Props>{
+  name: "ResizableIframe",
+  props: {
+    offsetSize: [String, Number, Object] as PropType<Settings["offsetSize"]>,
+    checkOrigin: [Boolean, Array] as PropType<Settings["checkOrigin"]>,
+    onIframeResize: Function as PropType<Settings["onIframeResize"]>,
+    targetElementSelector: [String] as PropType<Settings["targetElementSelector"]>,
+    bodyMargin: [String, Number] as PropType<Settings["bodyMargin"]>,
+    bodyPadding: [String, Number] as PropType<Settings["bodyPadding"]>,
+    enableLegacyLibSupport: Boolean,
+  },
+  setup(props: Props, { attrs }: { attrs: Record<string, unknown> }) {
+    const iframeRef = ref<HTMLIFrameElement | null>(null);
+    let cleanupFunctions: InitializeResult[] = [];
 
-const initializeResizer = (iframe: HTMLIFrameElement) => {
-  // biome-ignore lint/suspicious/noExplicitAny: Compile fail if no key exhaustiveness
-  const settings: Required<{ [K in keyof Settings]: any }> = {
-    offsetSize: props.offsetSize,
-    enableLegacyLibSupport: props.enableLegacyLibSupport,
-    checkOrigin: props.checkOrigin,
-    onIframeResize: props.onIframeResize,
-    targetElementSelector: props.targetElementSelector,
-    bodyMargin: props.bodyMargin,
-    bodyPadding: props.bodyPadding,
-  };
+    const initializeResizer = (iframe: HTMLIFrameElement) => {
+      // biome-ignore lint/suspicious/noExplicitAny: Compile fail if no key exhaustiveness
+      const settings: Required<{ [K in keyof Settings]: any }> = {
+        offsetSize: props.offsetSize,
+        enableLegacyLibSupport: props.enableLegacyLibSupport,
+        checkOrigin: props.checkOrigin,
+        onIframeResize: props.onIframeResize,
+        targetElementSelector: props.targetElementSelector,
+        bodyMargin: props.bodyMargin,
+        bodyPadding: props.bodyPadding,
+      };
 
-  Object.keys(settings).forEach((key) => {
-    if (settings[key as keyof Settings] === undefined) {
-      delete settings[key as keyof Settings];
-    }
-  });
+      Object.keys(settings).forEach((key) => {
+        if (settings[key as keyof Settings] === undefined) {
+          delete settings[key as keyof Settings];
+        }
+      });
 
-  cleanupFunctions = initialize(settings, iframe);
-};
+      cleanupFunctions = initialize(settings, iframe);
+    };
 
-onMounted(() => {
-  if (iframeRef.value) {
-    initializeResizer(iframeRef.value);
-  }
-});
+    onMounted(() => {
+      if (iframeRef.value) {
+        initializeResizer(iframeRef.value);
+      }
+    });
 
-onBeforeUnmount(() => {
-  cleanupFunctions.forEach((value) => value.unsubscribe());
-  cleanupFunctions = [];
+    onBeforeUnmount(() => {
+      cleanupFunctions.forEach((value) => value.unsubscribe());
+      cleanupFunctions = [];
+    });
+
+    return {
+      iframeRef,
+      attrs,
+    };
+  },
 });
 </script>
