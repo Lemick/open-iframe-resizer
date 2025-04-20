@@ -1,0 +1,38 @@
+---
+title: Vue.js Setup
+description: Setup the Vue.js component
+---
+
+The library can also be used as a Vue component:
+
+### Install the package
+
+```bash
+npm install @open-iframe-resizer/vue
+```
+
+### Import the component
+
+:::caution
+If your iframe is on another domain, don't forget to load the script on the child page, <a href={`${import.meta.env.BASE_URL}guides/cross-origin`}> more info here</a>.
+:::
+
+```js
+import { createApp } from "vue";
+import { IframeResizer } from "@open-iframe-resizer/vue";
+
+createApp({
+  components: {
+    IframeResizer
+  },
+  template: `
+      <div>
+        <IframeResizer src=""https://github.com" />
+      </div>
+    `,
+}).mount("#app");
+```
+
+### Example
+
+TODO
