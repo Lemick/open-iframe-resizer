@@ -19,6 +19,7 @@ export const commonConfig = {
             { label: "Getting started", slug: "guides/getting-started" },
             { label: "Cross-origin setup", slug: "guides/cross-origin" },
             { label: "React setup", slug: "guides/react" },
+            { label: "Vue setup", slug: "guides/vue" },
           ],
         },
         {
