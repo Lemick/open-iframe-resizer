@@ -31,11 +31,19 @@ jobs:
         id: test
         run: npm run test
 
-      - uses: actions/upload-artifact@v4
-        if: failure() && steps.test.outcome == 'failure'
+  upload-reports:
+    if: failure() && needs.test.outputs.outcome == 'failure'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project:
+          - core
+          - react
+          - vue
+    steps:
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
-          path: |
-            packages/core/playwright-report/
-            packages/core/e2e/__screenshots__/
+          name: ${{ matrix.project }}-playwright-report
+          path: packages/${{ matrix.project }}/playwright-report/
           retention-days: 7
