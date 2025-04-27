@@ -1,7 +1,7 @@
 {
 	"name": "@open-iframe-resizer/react",
 	"private": false,
-	"version": "1.4.2",
+	"version": "1.4.3",
 	"description": "Open-source modern iframe resizer component",
 	"license": "MIT",
 	"repository": {
@@ -44,8 +44,10 @@
 		"serve": "concurrently \"vite --port 5552\" \"vite --port 5553\"",
 		"test": "npx playwright install --with-deps && npx playwright test"
 	},
+	"dependencies": {
+		"@open-iframe-resizer/core": "1.4.3"
+	},
 	"devDependencies": {
-		"@open-iframe-resizer/core": "1.4.2",
 		"@testing-library/react": "^16.1.0",
 		"@types/react": "^19.0.1",
 		"@types/react-dom": "^19.1.2",
