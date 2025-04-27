@@ -18,14 +18,14 @@ echo "Updating core package version to $NEW_VERSION..."
 
 echo "Updating react package and its dependency version to $NEW_VERSION..."
 (
-  npm --workspace=packages/react pkg set "devDependencies.@open-iframe-resizer/core=$NEW_VERSION"
+  npm --workspace=packages/react pkg set "dependencies.@open-iframe-resizer/core=$NEW_VERSION"
   cd "$REACT_PACKAGE_DIR" || exit
   npm version "$NEW_VERSION" --no-git-tag-version
 )
 
 echo "Updating vue package and its dependency version to $NEW_VERSION..."
 (
-  npm --workspace=packages/vue pkg set "devDependencies.@open-iframe-resizer/core=$NEW_VERSION"
+  npm --workspace=packages/vue pkg set "dependencies.@open-iframe-resizer/core=$NEW_VERSION"
   cd "$VUE_PACKAGE_DIR" || exit
   npm version "$NEW_VERSION" --no-git-tag-version
 )
