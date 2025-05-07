@@ -52,6 +52,7 @@ export type Settings = {
    * Default: `undefined`
    */
   bodyMargin?: string;
+
   /**
    * Listener that is called after the iframe has been resized.
    * You can use a predefined handler like `updateParentScrollOnResize` or create your own custom handler.
@@ -59,6 +60,13 @@ export type Settings = {
    * Default: `undefined`
    */
   onIframeResize?: (context: ResizeContext) => void;
+
+  /**
+   * Listener that is called every time the iframes content size changes.
+   *
+   * Default: `undefined`
+   */
+  onIframeContentObserved?: (height: number) => void;
 };
 
 export type IframeResizeEventData = {

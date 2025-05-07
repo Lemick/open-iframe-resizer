@@ -32,7 +32,10 @@
       mounted &&
       React.createElement(IframeResizer, {
         src: 'http://localhost:5553/usecases/03-cross-origin-iframe/iframe-content.html',
-        style: { width: '100%' }
+        style: { width: '100%' },
+        onIframeContentObserved: (height) => {
+          console.log('Iframe content height:', height);
+        },
       })
     );
   }
