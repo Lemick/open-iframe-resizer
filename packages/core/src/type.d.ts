@@ -54,19 +54,20 @@ export type Settings = {
   bodyMargin?: string;
 
   /**
+   * Called whenever the observed content size changes and the iframe is about to be resized.
+   * Return `false` to cancel the resize; returning `true` or nothing will allow it.
+   *
+   * Default: `undefined`
+   */
+  onBeforeIframeResize?: (context: BeforeResizeContext) => boolean | undefined;
+
+  /**
    * Listener that is called after the iframe has been resized.
    * You can use a predefined handler like `updateParentScrollOnResize` or create your own custom handler.
    *
    * Default: `undefined`
    */
   onIframeResize?: (context: ResizeContext) => void;
-
-  /**
-   * Listener that is called every time the iframes content size changes.
-   *
-   * Default: `undefined`
-   */
-  onIframeContentObserved?: (height: number) => void;
 };
 
 export type IframeResizeEventData = {
@@ -96,6 +97,12 @@ export type ResizeContext = {
   interactionState: InteractionState;
   previousRenderState: ResizeRenderState;
   nextRenderState: ResizeRenderState;
+};
+
+export type BeforeResizeContext = {
+  iframe: HTMLIFrameElement;
+  settings: Settings;
+  observedHeight: number;
 };
 
 export type RegisteredElement = {

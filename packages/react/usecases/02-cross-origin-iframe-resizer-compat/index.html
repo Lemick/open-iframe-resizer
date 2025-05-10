@@ -35,7 +35,7 @@
         src: 'http://localhost:5553/usecases/02-cross-origin-iframe-resizer-compat/iframe-content.html',
         style: { width: '100%' },
         enableLegacyLibSupport: true,
-        onIframeContentObserved: (height) => {
+        onBeforeIframeResize: (height) => {
           console.log('Iframe content height:', height);
         },
       })

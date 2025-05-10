@@ -102,15 +102,8 @@ function addCrossOriginChildResizeListener(registeredElement: RegisteredElement,
       return;
     }
 
-    const onIframeContentObserved =
-      registeredElement.settings.onIframeContentObserved;
-
     if (event.data?.type === "iframe-resized") {
       const { height } = (event as IframeResizeEvent).data;
-
-      if (onIframeContentObserved && typeof height === "number") {
-        onIframeContentObserved(height);
-      }
 
       height && resizeIframe({ newHeight: height, registeredElement });
       return;
@@ -118,10 +111,6 @@ function addCrossOriginChildResizeListener(registeredElement: RegisteredElement,
 
     if (enableLegacyLibSupport) {
       const height = handleLegacyLibResizeMessage(event);
-
-      if (onIframeContentObserved && typeof height === "number") {
-        onIframeContentObserved(height);
-      }
 
       height !== null && resizeIframe({ newHeight: height, registeredElement });
       return;
@@ -210,13 +199,6 @@ function createResizerObserverLazyFactory() {
 
         const { height } = getBoundingRectSize(observedElement);
 
-        const onIframeContentObserved =
-          matchingRegisteredElement.settings.onIframeContentObserved;
-
-        if (onIframeContentObserved) {
-          onIframeContentObserved(height);
-        }
-
         if (!height) {
           return;
         }
@@ -236,6 +218,10 @@ function resizeIframe({ registeredElement, newHeight }: { registeredElement: Reg
   if (!initContext.isInitialized) {
     initContext.isInitialized = true;
     clearTimeout(initContext.retryTimeoutId);
+  }
+
+  if (settings.onBeforeIframeResize?.({ iframe, settings: { ...settings }, observedHeight: newHeight }) === false) {
+    return;
   }
 
   const previousBoundingRect = iframe.getBoundingClientRect();
