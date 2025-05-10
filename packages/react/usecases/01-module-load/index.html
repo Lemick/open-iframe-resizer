@@ -34,7 +34,7 @@
       React.createElement(IframeResizer, {
         src: './iframe-content.html',
         style: { width: '100%' },
-        onIframeContentObserved: (height) => {
+        onBeforeIframeResize: (height) => {
           console.log('Iframe content height:', height);
         },
       })

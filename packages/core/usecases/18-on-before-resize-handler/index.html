@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iframe Resize Example</title>
+  <style>
+      iframe {
+          border: 2px dotted red;
+          width: 800px;
+          height: 100px;
+      }
+  </style>
+</head>
+<body>
+<iframe id="myIframe" src="iframe-content.html"></iframe>
+
+<script type="module">
+  import { initialize } from "/dist/index.js";
+
+  initialize({
+    onBeforeIframeResize: ({ observedHeight }) => {
+      if (observedHeight >= 2000) {
+        return false;
+      }
+    },
+  }, "#myIframe");
+</script>
+
+</body>
+</html>
