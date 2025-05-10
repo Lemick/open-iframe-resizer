@@ -104,14 +104,12 @@ function addCrossOriginChildResizeListener(registeredElement: RegisteredElement,
 
     if (event.data?.type === "iframe-resized") {
       const { height } = (event as IframeResizeEvent).data;
-
       height && resizeIframe({ newHeight: height, registeredElement });
       return;
     }
 
     if (enableLegacyLibSupport) {
       const height = handleLegacyLibResizeMessage(event);
-
       height !== null && resizeIframe({ newHeight: height, registeredElement });
       return;
     }
@@ -198,7 +196,6 @@ function createResizerObserverLazyFactory() {
         }
 
         const { height } = getBoundingRectSize(observedElement);
-
         if (!height) {
           return;
         }
