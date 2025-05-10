@@ -21,7 +21,17 @@ export function IframeResizer(props: Props) {
 }
 
 function filterProps(props: Props): { iframeAttributes: IframeHTMLAttributes<HTMLIFrameElement>; settings: Partial<Settings> } {
-  const { offsetSize, enableLegacyLibSupport, checkOrigin, onIframeResize, targetElementSelector, bodyMargin, bodyPadding, ...iframeAttributes } = props;
+  const {
+    offsetSize,
+    enableLegacyLibSupport,
+    checkOrigin,
+    onIframeResize,
+    onBeforeIframeResize,
+    targetElementSelector,
+    bodyMargin,
+    bodyPadding,
+    ...iframeAttributes
+  } = props;
 
   // biome-ignore lint/suspicious/noExplicitAny: Compile fail if no key exhaustiveness
   const settings: Required<{ [K in keyof Settings]: any }> = {
@@ -29,6 +39,7 @@ function filterProps(props: Props): { iframeAttributes: IframeHTMLAttributes<HTM
     enableLegacyLibSupport,
     checkOrigin,
     onIframeResize,
+    onBeforeIframeResize,
     targetElementSelector,
     bodyMargin,
     bodyPadding,

@@ -80,6 +80,13 @@ Below is a detailed description of each property:
 - **Description**: Listener that is called after the iframe has been resized. You can use a predefined handler like `updateParentScrollOnResize` create your own custom handler.
 - **Default**: `undefined`
 
+
+### `onBeforeIframeResize`
+
+- **Type**: `(context: BeforeResizeContext) => boolean | undefined`
+- **Description**: Called whenever the observed content size changes and the iframe is about to be resized. Return `false` to cancel the resize; returning `true` or nothing will allow it.
+- **Default**: `undefined`
+
 --- 
 ## Resize handlers
 
