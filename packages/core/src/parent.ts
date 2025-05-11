@@ -217,6 +217,10 @@ function resizeIframe({ registeredElement, newHeight }: { registeredElement: Reg
     clearTimeout(initContext.retryTimeoutId);
   }
 
+  if (settings.onBeforeIframeResize?.({ iframe, settings: { ...settings }, observedHeight: newHeight }) === false) {
+    return;
+  }
+
   const previousBoundingRect = iframe.getBoundingClientRect();
   const newCalculatedHeight = newHeight + settings.offsetSize;
   iframe.style.height = `${newCalculatedHeight}px`;
