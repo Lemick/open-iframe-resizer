@@ -1,11 +1,11 @@
 "use client";
 
 import { type Settings, initialize } from "@open-iframe-resizer/core";
-import { type IframeHTMLAttributes, useEffect, useRef } from "react";
+import { type IframeHTMLAttributes, forwardRef, useCallback, useEffect, useRef } from "react";
 
 interface Props extends IframeHTMLAttributes<HTMLIFrameElement>, Partial<Settings> {}
 
-export function IframeResizer(props: Props) {
+export const IframeResizer = forwardRef<HTMLIFrameElement, Props>((props, forwardedRef) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const { settings, iframeAttributes } = filterProps(props);
 
@@ -17,8 +17,23 @@ export function IframeResizer(props: Props) {
     return () => results.forEach((value) => value.unsubscribe());
   }, []);
 
-  return <iframe {...iframeAttributes} ref={iframeRef} />;
-}
+  const composedRef = useCallback(
+    (el: HTMLIFrameElement) => {
+      iframeRef.current = el;
+
+      if (typeof forwardedRef === "function") {
+        forwardedRef(el);
+      } else if (forwardedRef) {
+        forwardedRef.current = el;
+      }
+    },
+    [forwardedRef],
+  );
+
+  return <iframe {...iframeAttributes} ref={composedRef} />;
+});
+
+IframeResizer.displayName = "IframeResizer";
 
 function filterProps(props: Props): { iframeAttributes: IframeHTMLAttributes<HTMLIFrameElement>; settings: Partial<Settings> } {
   const {
