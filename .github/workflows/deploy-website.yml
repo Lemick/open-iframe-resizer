@@ -3,7 +3,6 @@ name: Deploy website content to Pages
 on:
   push:
     branches: ["main"]
-
   workflow_dispatch:
 
 permissions:
@@ -18,19 +17,27 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      website_changed: ${{ steps.check_changes.outputs.detected }}
     steps:
       - name: Checkout your repository using git
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
       - name: Check for changes in the website directory
         id: check_changes
         run: |
-          if git diff --quiet HEAD^ HEAD ./website; then
-            echo "changes_detected=false" >> $GITHUB_ENV
+          if git diff --quiet HEAD^ HEAD -- ./website; then
+            echo "No changes detected in ./website"
+            echo "detected=false" >> $GITHUB_OUTPUT
           else
-            echo "changes_detected=true" >> $GITHUB_ENV
+            echo "Changes detected in ./website"
+            echo "detected=true" >> $GITHUB_OUTPUT
           fi
+
       - name: Install, build, and upload your site
-        if: env.changes_detected == 'true'
+        if: steps.check_changes.outputs.detected == 'true'
         uses: withastro/action@v3
         with:
           path: ./website
@@ -38,6 +45,7 @@ jobs:
 
   deploy:
     needs: build
+    if: needs.build.outputs.website_changed == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
