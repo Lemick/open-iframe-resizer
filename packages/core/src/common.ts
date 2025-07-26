@@ -30,7 +30,7 @@ export const getDefaultSettings: () => Settings = () => ({ offsetSize: 0, checkO
 export const isIframeSameOrigin = (iframe: HTMLIFrameElement) => {
   try {
     return new URL(iframe.src).origin === window.location.origin;
-  } catch (e) {
+  } catch (_) {
     return false;
   }
 };
@@ -41,7 +41,7 @@ export const extractIframeOrigin = (iframe: HTMLIFrameElement): string | null =>
     if (origin !== "about:blank") {
       return origin;
     }
-  } catch (error) {}
+  } catch (_) {}
   return null;
 };
 
