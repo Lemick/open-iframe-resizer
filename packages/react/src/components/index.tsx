@@ -1,7 +1,7 @@
 "use client";
 
-import { type Settings, initialize } from "@open-iframe-resizer/core";
-import { type IframeHTMLAttributes, forwardRef, useCallback, useEffect, useRef } from "react";
+import { initialize, type Settings } from "@open-iframe-resizer/core";
+import { forwardRef, type IframeHTMLAttributes, useCallback, useEffect, useRef } from "react";
 
 interface Props extends IframeHTMLAttributes<HTMLIFrameElement>, Partial<Settings> {}
 
@@ -14,7 +14,10 @@ export const IframeResizer = forwardRef<HTMLIFrameElement, Props>((props, forwar
       return;
     }
     const results = initialize(settings, iframeRef.current);
-    return () => results.forEach((value) => value.unsubscribe());
+    return () =>
+      results.forEach((value) => {
+        value.unsubscribe();
+      });
   }, []);
 
   const composedRef = useCallback(
