@@ -46,7 +46,11 @@ export const extractIframeOrigin = (iframe: HTMLIFrameElement): string | null =>
 };
 
 export const removeUndefinedProperties = <T extends { [key: string]: unknown }>(object: T): T => {
-  Object.keys(object).forEach((key) => object[key] === undefined && delete object[key]);
+  Object.keys(object).forEach((key) => {
+    if (object[key] === undefined) {
+      delete object[key];
+    }
+  });
   return object;
 };
 

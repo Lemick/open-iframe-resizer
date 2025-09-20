@@ -3,8 +3,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onBeforeUnmount, ref, type PropType } from "vue";
-import { initialize, type InitializeResult, type Settings } from "@open-iframe-resizer/core";
+import { type InitializeResult, initialize, type Settings } from "@open-iframe-resizer/core";
+import { defineComponent, onBeforeUnmount, onMounted, type PropType, ref } from "vue";
 
 type Props = Partial<Settings>;
 
@@ -53,7 +53,9 @@ export default defineComponent(<Props>{
     });
 
     onBeforeUnmount(() => {
-      cleanupFunctions.forEach((value) => value.unsubscribe());
+      cleanupFunctions.forEach((value) => {
+        value.unsubscribe();
+      });
       cleanupFunctions = [];
     });
 
