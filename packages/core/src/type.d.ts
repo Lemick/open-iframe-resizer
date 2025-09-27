@@ -2,7 +2,7 @@
  * Automatically resize the selected iframes when their inner content grows.
  * @param settings The settings for the selected iframes. The default settings properties are picked if empty.
  * @param selector The selector for the iframe(s) or the HTMLIFrameElement to be resized. If empty, all document iframe elements will be selected.
- * @returns A result array, which can be used to clean up the listeners if you often remove iframes from the document.
+ * @returns A result array Promise, which can be used to clean up the listeners if you remove iframes from the document and want to clean all associated listeners.
  */
 export type InitializeFunction = (settings?: Partial<Settings>, selector?: string | HTMLIFrameElement) => Promise<InitializeResult[]>;
 export type InitializeResult = { unsubscribe: () => void };
