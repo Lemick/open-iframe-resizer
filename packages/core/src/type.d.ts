@@ -4,7 +4,7 @@
  * @param selector The selector for the iframe(s) or the HTMLIFrameElement to be resized. If empty, all document iframe elements will be selected.
  * @returns A result array, which can be used to clean up the listeners if you often remove iframes from the document.
  */
-export type InitializeFunction = (settings?: Partial<Settings>, selector?: string | HTMLIFrameElement) => InitializeResult[];
+export type InitializeFunction = (settings?: Partial<Settings>, selector?: string | HTMLIFrameElement) => Promise<InitializeResult[]>;
 export type InitializeResult = { unsubscribe: () => void };
 
 export type Settings = {

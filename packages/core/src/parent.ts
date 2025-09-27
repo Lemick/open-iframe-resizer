@@ -18,7 +18,7 @@ import type { IframeChildInitEventData, IframeResizeEvent, InitializeFunction, R
 const getResizeObserverInstance = createResizerObserverLazyFactory();
 let registeredElements: Array<RegisteredElement> = [];
 
-const initialize: InitializeFunction = (clientSettings, selector) => {
+const initialize: InitializeFunction = async (clientSettings, selector) => {
   if (!isBrowser()) {
     return [];
   }
@@ -26,23 +26,25 @@ const initialize: InitializeFunction = (clientSettings, selector) => {
   const iframes = resolveIframesToRegister(selector);
   const allowedOrigins = registerIframesAllowOrigins(finalSettings, iframes);
 
-  return iframes.map((iframe) => {
-    const registeredElement: RegisteredElement = {
-      iframe,
-      settings: finalSettings,
-      interactionState: { isHovered: false },
-      initContext: { isInitialized: false, retryAttempts: 0 },
-    };
-    const unsubscribe = addChildResizeListener(registeredElement, allowedOrigins);
-    registeredElements.push(registeredElement);
+  return Promise.all(
+    iframes.map(async (iframe) => {
+      const registeredElement: RegisteredElement = {
+        iframe,
+        settings: finalSettings,
+        interactionState: { isHovered: false },
+        initContext: { isInitialized: false, retryAttempts: 0 },
+      };
+      const unsubscribe = await addChildResizeListener(registeredElement, allowedOrigins);
+      registeredElements.push(registeredElement);
 
-    return {
-      unsubscribe: () => {
-        unsubscribe();
-        registeredElements = registeredElements.filter((entry) => entry.iframe !== iframe);
-      },
-    };
-  });
+      return {
+        unsubscribe: () => {
+          unsubscribe();
+          registeredElements = registeredElements.filter((entry) => entry.iframe !== iframe);
+        },
+      };
+    }),
+  );
 };
 
 function resolveIframesToRegister(selector?: string | HTMLIFrameElement): HTMLIFrameElement[] {
@@ -74,8 +76,10 @@ function registerIframesAllowOrigins(settings: Settings, iframes: HTMLIFrameElem
   return allowedOrigins;
 }
 
-function addChildResizeListener(registeredElement: RegisteredElement, allowedOrigins: string[]) {
-  const removeResizeListener = isIframeSameOrigin(registeredElement.iframe)
+async function addChildResizeListener(registeredElement: RegisteredElement, allowedOrigins: string[]) {
+  const isSameOrigin = await isIframeSameOrigin(registeredElement.iframe);
+
+  const removeResizeListener = isSameOrigin
     ? addSameOriginChildResizeListener(registeredElement)
     : addCrossOriginChildResizeListener(registeredElement, allowedOrigins);
 
@@ -95,7 +99,8 @@ function addCrossOriginChildResizeListener(registeredElement: RegisteredElement,
   } = registeredElement;
 
   const handleIframeResizedMessage = (event: MessageEvent) => {
-    const isOriginValid = !checkOrigin || allowedOrigins.includes(event.origin);
+    const eventOriginObfuscated = event.origin === "null";
+    const isOriginValid = !checkOrigin || eventOriginObfuscated || allowedOrigins.includes(event.origin);
     const isIframeTarget = iframe.contentWindow === event.source;
 
     if (!isIframeTarget || !isOriginValid) {

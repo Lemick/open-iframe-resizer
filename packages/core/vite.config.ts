@@ -1,6 +1,6 @@
 import * as path from "node:path";
 import { visualizer } from "rollup-plugin-visualizer";
-import { type PluginOption, defineConfig } from "vite";
+import { defineConfig, type PluginOption } from "vite";
 import dts from "vite-plugin-dts";
 
 export default defineConfig((env) => ({
@@ -33,6 +33,7 @@ export default defineConfig((env) => ({
     },
   },
   server: {
+    cors: true,
     watch: {
       ignored: ["!**/dist/**"], // Force HMR for build.output
     },
