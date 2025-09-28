@@ -12,7 +12,7 @@ Called to automatically track iframes and resize the selected iframes when their
 
 `selector` : The `string` selector for the iframe(s) or the `HTMLIFrameElement` to be resized. If empty, all iframe elements in the document will be selected.
 
-It returns an array of objects, which can be used to stop tracking an iframe.
+It returns a Promise of an array of objects, which can be used to stop tracking an iframe.
 
 #### Example 1
 ```js
@@ -25,11 +25,13 @@ initialize({
 
 #### Example 2
 ```js
-// Track all existing iframes with default settings
-const results = initialize();
+async function initializeAllIframes() {
+  const results = await initialize(); // Track all existing iframes with default settings
+  results.forEach(result => result.unsubscribe());  // You can later untrack these iframes
+}
 
-// You can later untrack these iframes
-results.forEach(result => result.unsubscribe());
+
+
 ```
 --- 
 ## Settings

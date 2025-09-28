@@ -15,7 +15,7 @@ export default defineComponent(<Props>{
     checkOrigin: [Boolean, Array] as PropType<Settings["checkOrigin"]>,
     onIframeResize: Function as PropType<Settings["onIframeResize"]>,
     onBeforeIframeResize: Function as PropType<Settings["onBeforeIframeResize"]>,
-    targetElementSelector: [String] as PropType<Settings["targetElementSelector"]>,
+    targetElementSelector: String as PropType<Settings["targetElementSelector"]>,
     bodyMargin: [String, Number] as PropType<Settings["bodyMargin"]>,
     bodyPadding: [String, Number] as PropType<Settings["bodyPadding"]>,
     enableLegacyLibSupport: Boolean,
@@ -23,8 +23,9 @@ export default defineComponent(<Props>{
   setup(props: Props, { attrs }: { attrs: Record<string, unknown> }) {
     const iframeRef = ref<HTMLIFrameElement | null>(null);
     let cleanupFunctions: InitializeResult[] = [];
+    let isUnmounted = false;
 
-    const initializeResizer = (iframe: HTMLIFrameElement) => {
+    const initializeResizer = async (iframe: HTMLIFrameElement) => {
       // biome-ignore lint/suspicious/noExplicitAny: Compile fail if no key exhaustiveness
       const settings: Required<{ [K in keyof Settings]: any }> = {
         offsetSize: props.offsetSize,
@@ -43,7 +44,15 @@ export default defineComponent(<Props>{
         }
       });
 
-      cleanupFunctions = initialize(settings, iframe);
+      const results = await initialize(settings, iframe);
+
+      if (isUnmounted) {
+        results.forEach((c) => {
+          c.unsubscribe();
+        });
+      } else {
+        cleanupFunctions = results;
+      }
     };
 
     onMounted(() => {
@@ -53,6 +62,7 @@ export default defineComponent(<Props>{
     });
 
     onBeforeUnmount(() => {
+      isUnmounted = true;
       cleanupFunctions.forEach((value) => {
         value.unsubscribe();
       });

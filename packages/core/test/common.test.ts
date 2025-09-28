@@ -1,25 +1,59 @@
-import { afterEach, beforeEach, describe, expect, test } from "vitest";
+import { describe, expect, it } from "vitest";
 import { isIframeSameOrigin } from "../src/common";
 
-describe("isIframeSameOrigin", () => {
-  let iframe: HTMLIFrameElement;
+const triggerLoad = (iframe: HTMLIFrameElement) => {
+  const event = new Event("load");
+  iframe.dispatchEvent(event);
+};
 
-  beforeEach(() => {
-    iframe = document.createElement("iframe");
-    document.body.appendChild(iframe);
+describe("isIframeSameOriginAsync", () => {
+  it("resolves true when contentDocument is accessible and src is not about:blank", async () => {
+    const iframe = document.createElement("iframe");
+    iframe.src = "https://example.com";
+    Object.defineProperty(iframe, "contentDocument", {
+      value: { URL: "https://example.com" },
+      configurable: true,
+    });
+
+    const result = await isIframeSameOrigin(iframe);
+
+    expect(result).toBe(true);
   });
 
-  afterEach(() => {
-    document.body.removeChild(iframe);
+  it("resolves false when accessing contentDocument throws (cross-origin)", async () => {
+    const iframe = document.createElement("iframe");
+    iframe.src = "https://cross-origin.com";
+
+    Object.defineProperty(iframe, "contentDocument", {
+      get() {
+        throw new Error("Blocked");
+      },
+    });
+
+    const result = await isIframeSameOrigin(iframe);
+
+    expect(result).toBe(false);
   });
 
-  test.each([
-    { src: `${window.location.origin}/test-page.html`, expected: true, description: "same-origin URL" },
-    { src: "https://example.com/test-page.html", expected: false, description: "cross-origin URL" },
-    { src: "/test-page.html", expected: true, description: "relative URL (same-origin)" },
-    { src: "", expected: true, description: "empty src (same-origin)" },
-  ])("returns $expected for $description", ({ src, expected }) => {
-    iframe.src = src;
-    expect(isIframeSameOrigin(iframe)).toBe(expected);
+  it("waits for load event when contentDocument.URL is about:blank", async () => {
+    const iframe = document.createElement("iframe");
+    iframe.src = "about:blank";
+
+    Object.defineProperty(iframe, "contentDocument", {
+      value: { URL: "about:blank" },
+      configurable: true,
+    });
+
+    const promise = isIframeSameOrigin(iframe);
+
+    Object.defineProperty(iframe, "contentDocument", {
+      value: { URL: "https://same-origin.com" },
+      configurable: true,
+    });
+
+    triggerLoad(iframe);
+    const result = await promise;
+
+    expect(result).toBe(true);
   });
 });

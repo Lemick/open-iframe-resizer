@@ -23,7 +23,6 @@ function initializeChildListener() {
     if (event.data?.type !== "iframe-child-init") {
       return;
     }
-
     deferWhenWindowDocumentIsLoaded(() => handleInitializeSignal(event));
   });
 }

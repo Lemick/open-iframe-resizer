@@ -1,24 +1,40 @@
 "use client";
 
-import { initialize, type Settings } from "@open-iframe-resizer/core";
+import { type InitializeResult, initialize, type Settings } from "@open-iframe-resizer/core";
 import { forwardRef, type IframeHTMLAttributes, useCallback, useEffect, useRef } from "react";
 
 interface Props extends IframeHTMLAttributes<HTMLIFrameElement>, Partial<Settings> {}
 
 export const IframeResizer = forwardRef<HTMLIFrameElement, Props>((props, forwardedRef) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const unsubscribeIframeRef = useRef<InitializeResult[]>([]);
   const { settings, iframeAttributes } = filterProps(props);
 
   useEffect(() => {
+    let isUnmounted = false;
+
     if (!iframeRef.current) {
       return;
     }
-    const results = initialize(settings, iframeRef.current);
-    return () =>
-      results.forEach((value) => {
-        value.unsubscribe();
+
+    initialize(settings, iframeRef.current).then((results) => {
+      if (isUnmounted) {
+        results.forEach((c) => {
+          c.unsubscribe();
+        });
+      } else {
+        unsubscribeIframeRef.current = results;
+      }
+    });
+
+    return () => {
+      isUnmounted = true;
+      unsubscribeIframeRef.current?.forEach((c) => {
+        c.unsubscribe();
       });
-  }, []);
+      unsubscribeIframeRef.current = [];
+    };
+  }, [settings]);
 
   const composedRef = useCallback(
     (el: HTMLIFrameElement) => {
