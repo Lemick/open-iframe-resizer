@@ -7,10 +7,11 @@ import {
   isInIframe,
   resolveElementToObserve,
 } from "~/common";
-import type { IframeChildInitEventData, IframeResizeEventData } from "./type";
+import type { IframeChildInitEventData, IframeGetChildDimensionsEventData, IframeResizeEventData } from "./type";
 
 const getResizeObserverInstance = createResizerObserverLazyFactory();
 let initialized = false;
+let registeredTargetElementSelector: string | undefined;
 
 initializeChildListener();
 
@@ -20,14 +21,16 @@ function initializeChildListener() {
   }
 
   window.addEventListener("message", (event: MessageEvent) => {
-    if (event.data?.type !== "iframe-child-init") {
-      return;
+    if (event.data?.type === "iframe-child-init") {
+      return deferWhenWindowDocumentIsLoaded(() => handleInitializeMessage(event));
     }
-    deferWhenWindowDocumentIsLoaded(() => handleInitializeSignal(event));
+    if (event.data?.type === "iframe-get-child-dimensions") {
+      return deferWhenWindowDocumentIsLoaded(() => handleGetDimensionsMessage(event));
+    }
   });
 }
 
-function handleInitializeSignal(event: MessageEvent<IframeChildInitEventData>, nthRetry = 0) {
+function handleInitializeMessage(event: MessageEvent<IframeChildInitEventData>, nthRetry = 0) {
   const { targetElementSelector, bodyPadding, bodyMargin } = event.data;
   const elementToObserve = resolveElementToObserve(document, targetElementSelector);
 
@@ -36,15 +39,26 @@ function handleInitializeSignal(event: MessageEvent<IframeChildInitEventData>, n
   }
 
   if (!elementToObserve) {
-    return setTimeout(() => handleInitializeSignal(event, nthRetry + 1), getExponentialBackoffDelay(nthRetry));
+    return setTimeout(() => handleInitializeMessage(event, nthRetry + 1), getExponentialBackoffDelay(nthRetry));
   }
 
   applyStyleSettings(document, { bodyMargin, bodyPadding });
+  registeredTargetElementSelector = targetElementSelector;
 
   const resizeObserver = getResizeObserverInstance();
   resizeObserver.disconnect();
   resizeObserver.observe(elementToObserve);
   initialized = true;
+}
+
+function handleGetDimensionsMessage(event: MessageEvent<IframeGetChildDimensionsEventData>) {
+  const elementToObserve = resolveElementToObserve(document, registeredTargetElementSelector);
+
+  if (!initialized || window.parent !== event.source || !elementToObserve) {
+    return;
+  }
+
+  sendIframeResizeMessage(elementToObserve);
 }
 
 function createResizerObserverLazyFactory() {
@@ -56,18 +70,22 @@ function createResizerObserverLazyFactory() {
         if (!entries[0].target) {
           return;
         }
-        const { height, width } = getBoundingRectSize(entries[0].target);
 
-        const data: IframeResizeEventData = {
-          type: "iframe-resized",
-          width,
-          height,
-        };
-        window.parent.postMessage(data, "*");
+        sendIframeResizeMessage(entries[0].target);
       });
     }
     return resizeObserver;
   };
 }
+
+const sendIframeResizeMessage = (element: Element) => {
+  const { width, height } = getBoundingRectSize(element);
+  const data: IframeResizeEventData = {
+    type: "iframe-resized",
+    width,
+    height,
+  };
+  window.parent.postMessage(data, "*");
+};
 
 export { initializeChildListener };

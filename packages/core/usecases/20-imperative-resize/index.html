@@ -7,17 +7,30 @@
   <style>
       iframe {
           border: 2px dotted red;
-          width: 100%;
+          width: 1000px;
       }
   </style>
 </head>
 <body>
+
+<div>
+<button onclick="window.resizeIframe()">Resize iframe</button>
+</div>
 <iframe id="myIframe" src="iframe-content.html"></iframe>
 
 <script type="module">
   import { initialize } from "/dist/index.js";
 
-  initialize({}, "#myIframe");
+  let canResize = false;
+
+  const [{ resize }] = await initialize({
+    onBeforeIframeResize: () => canResize,
+  }, "#myIframe");
+
+  window.resizeIframe = () => {
+    canResize = true;
+    resize();
+  };
 </script>
 
 </body>

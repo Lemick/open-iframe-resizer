@@ -5,7 +5,7 @@
  * @returns A result array Promise, which can be used to clean up the listeners if you remove iframes from the document and want to clean all associated listeners.
  */
 export type InitializeFunction = (settings?: Partial<Settings>, selector?: string | HTMLIFrameElement) => Promise<InitializeResult[]>;
-export type InitializeResult = { unsubscribe: () => void };
+export type InitializeResult = { unsubscribe: () => void; resize: () => void };
 
 export type Settings = {
   /**
@@ -83,6 +83,10 @@ export type IframeChildInitEventData = {
   bodyMargin?: string;
 };
 
+export type IframeGetChildDimensionsEventData = {
+  type: "iframe-get-child-dimensions";
+};
+
 export type IframeResizeEvent = MessageEvent<IframeResizeEventData>;
 
 export type InteractionState = {
@@ -103,6 +107,7 @@ export type BeforeResizeContext = {
   iframe: HTMLIFrameElement;
   settings: Settings;
   observedHeight: number;
+  interactionState: InteractionState;
 };
 
 export type RegisteredElement = {
