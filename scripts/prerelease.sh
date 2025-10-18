@@ -10,6 +10,21 @@ CORE_PACKAGE_DIR="./packages/core"
 REACT_PACKAGE_DIR="./packages/react"
 VUE_PACKAGE_DIR="./packages/vue"
 
+safe_sed() {
+  local search="$1"
+  local replace="$2"
+  shift 2
+  local files=("$@")
+
+  for f in "${files[@]}"; do
+    if [[ "$(uname)" == "Darwin" ]]; then
+      sed -i '' "s|${search}|${replace}|g" "$f"
+    else
+      sed -i "s|${search}|${replace}|g" "$f"
+    fi
+  done
+}
+
 echo "Updating core package version to $NEW_VERSION..."
 (
   cd "$CORE_PACKAGE_DIR" || exit
@@ -33,3 +48,14 @@ echo "Updating vue package and its dependency version to $NEW_VERSION..."
 npm install
 
 echo "All versions updated successfully!"
+
+git fetch --tags
+OLD_VERSION=$(git describe --tags "$(git rev-list --tags --max-count=1)")
+OLD_VERSION="${OLD_VERSION#v}"
+
+safe_sed "@v${OLD_VERSION}" "@v${NEW_VERSION}" "README.md"
+
+mapfile -t mdx_files < <(find website -type f -name "*.mdx")
+safe_sed "@v${OLD_VERSION}" "@v${NEW_VERSION}" "${mdx_files[@]}"
+
+echo "Updated version references in markdown files"
