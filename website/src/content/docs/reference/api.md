@@ -14,25 +14,41 @@ Called to automatically track iframes and resize the selected iframes when their
 
 It returns a Promise of an array of objects, which can be used to stop tracking an iframe.
 
-#### Example 1
+#### Exemples 
+
+##### Track a specific iframe by its ID and customize certain properties
 ```js
-// Track a specific iframe using its ID and customizing certain properties
 initialize({
   bodyPadding: "0px",
-  bodyMargin: "0px"
+  bodyMargin: "0px",
 }, "#my-iframe");
 ```
 
-#### Example 2
+##### Track all iframes with default settings, then untrack them later
 ```js
 async function initializeAllIframes() {
-  const results = await initialize(); // Track all existing iframes with default settings
-  results.forEach(result => result.unsubscribe());  // You can later untrack these iframes
+  const results = await initialize();
+  
+  // Later, when you want to stop tracking the iframes
+  results.forEach(result => result.unsubscribe());
 }
-
-
-
 ```
+
+##### Prevent automatic resizing when the iframe is hovered
+```js
+initialize({
+  onBeforeIframeResize: (context) => !context.interactionState.isHovered,
+}, iframeElement);
+```
+
+##### Manually resize an iframe
+```js
+async function initializeIframe(button, iframeElement) {
+  const [result] = await initialize({}, iframeElement);
+  button.addEventListener("click", () => result.resize());
+}
+```
+
 --- 
 ## Settings
 
@@ -92,7 +108,7 @@ Below is a detailed description of each property:
 --- 
 ## Resize handlers
 
-### `updateParentScrollOnResize` 
+#### `updateParentScrollOnResize` 
 
 This handler attempts to fix the issue where the iframe is resized after interaction. 
 For example, if your iframe contains a multi-step form where each step has a different height, the iframe might disappear from view after resizing.
