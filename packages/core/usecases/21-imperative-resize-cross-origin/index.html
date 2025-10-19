@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iframe Resize Example</title>
+  <style>
+      iframe {
+          border: 2px dotted red;
+          width: 1000px;
+      }
+  </style>
+</head>
+<body>
+
+<div>
+<button onclick="window.resizeIframe()">Resize iframe</button>
+</div>
+<iframe id="myIframe" src="http://localhost:5551/usecases/21-imperative-resize-cross-origin/iframe-content.html"></iframe>
+
+<script type="module">
+  import { initialize } from "/dist/index.js";
+
+  let canResize = false;
+
+  const [{ resize }] = await initialize({
+    onBeforeIframeResize: () => canResize,
+  }, "#myIframe");
+
+  window.resizeIframe = () => {
+    canResize = true;
+    resize();
+  };
+</script>
+
+</body>
+</html>

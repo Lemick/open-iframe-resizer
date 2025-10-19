@@ -12,7 +12,7 @@
   </style>
 </head>
 <body>
-<h1 id="title">Iframe from a different origin (iframe resize script will make 3 seconds to load)</h1>
+<h1 id="title">Iframe from a different origin</h1>
 <p id="content">This is the initial text that loads with the page.</p>
 
 <script>
@@ -28,11 +28,10 @@
     } else {
       clearInterval(intervalId);
     }
-  }, 300);
+  }, 200);
 </script>
 
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.0.0/iframeResizer.contentWindow.js"></script>
+<script src="./iframe-resizer.4.0.0.js"></script>
 
 <!--
 Old version
@@ -40,8 +39,6 @@ Old version
 
 New version
 <script src="https://cdn.jsdelivr.net/npm/@iframe-resizer/child@5.0.0/index.umd.min.js"></script>
-
-
 -->
 
 </body>
