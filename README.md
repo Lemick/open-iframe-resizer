@@ -45,6 +45,12 @@ npm install @open-iframe-resizer/react
 npm install @open-iframe-resizer/vue
 ```
 
+### Angular
+
+```bash
+npm install @open-iframe-resizer/angular
+```
+
 ## Full documentation
 
 Explore the [full documentation](https://lemick.github.io/open-iframe-resizer/guides/getting-started/#_top)
