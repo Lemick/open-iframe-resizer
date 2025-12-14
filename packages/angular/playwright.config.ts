@@ -26,7 +26,7 @@ export default defineConfig({
   timeout: 15000,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    baseURL: "http://localhost:5552",
+    baseURL: "http://localhost:5000",
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on",
@@ -71,8 +71,8 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: "npm run serve",
-    url: "http://localhost:5552",
+    command: "npm run serve:dist",
+    url: "http://localhost:5000",
     reuseExistingServer: !process.env.CI,
   },
 });

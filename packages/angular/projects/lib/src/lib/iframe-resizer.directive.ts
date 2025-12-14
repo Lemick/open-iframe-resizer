@@ -1,13 +1,14 @@
-import { type AfterViewInit, Directive, type ElementRef, Input, type OnDestroy } from "@angular/core";
+// biome-ignore lint/style/useImportType: ng does not like it
+import { type AfterViewInit, Directive, ElementRef, Input, type OnDestroy } from "@angular/core";
 
 import { type BeforeResizeContext, type InitializeResult, initialize, type ResizeContext, type Settings } from "@open-iframe-resizer/core";
 
 @Directive({
-  selector: "iframe[appOpenIframeResizer]",
+  selector: "iframe[oirIframeResizer]",
   standalone: true,
 })
 export class IframeResizerDirective implements AfterViewInit, OnDestroy {
-  constructor(private el: ElementRef<HTMLIFrameElement>) {}
+  constructor(private el: ElementRef<HTMLIFrameElement>) { }
 
   @Input() offsetSize?: number;
   @Input() enableLegacyLibSupport?: boolean;
@@ -28,7 +29,8 @@ export class IframeResizerDirective implements AfterViewInit, OnDestroy {
       return;
     }
 
-    const settings: Partial<Settings> = {
+    // biome-ignore lint/suspicious/noExplicitAny: Compile fail if no key exhaustiveness
+    const settings: Required<{ [K in keyof Settings]: any }> = {
       offsetSize: this.offsetSize,
       enableLegacyLibSupport: this.enableLegacyLibSupport,
       checkOrigin: this.checkOrigin,
@@ -38,6 +40,7 @@ export class IframeResizerDirective implements AfterViewInit, OnDestroy {
       bodyMargin: this.bodyMargin,
       bodyPadding: this.bodyPadding,
     };
+
 
     initialize(settings, iframe).then((results) => {
       if (this.isDestroyed) {

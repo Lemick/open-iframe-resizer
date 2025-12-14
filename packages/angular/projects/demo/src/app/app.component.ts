@@ -1,11 +1,17 @@
-import { Component } from '@angular/core';
-import {IframeResizerDirective} from 'lib';
+import { CommonModule } from "@angular/common";
+import { Component } from "@angular/core";
+import { IframeResizerDirective } from "lib";
 
 @Component({
-  selector: 'app-root',
-  imports: [IframeResizerDirective],
-  templateUrl: './app.component.html',
+  selector: "app-root",
+  imports: [IframeResizerDirective, CommonModule],
+  templateUrl: "./app.component.html",
 })
 export class AppComponent {
-  title = 'demo';
+  iframeMounted: boolean = false;
+  title = "demo";
+
+  toggleIframe(): void {
+    this.iframeMounted = !this.iframeMounted;
+  }
 }

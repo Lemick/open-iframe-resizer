@@ -2,4 +2,4 @@
  * Public API Surface of lib
  */
 
-export * from "./lib/lib.directive";
+export * from "./lib/iframe-resizer.directive";
