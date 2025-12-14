@@ -4,5 +4,6 @@
   "lib": {
     "entryFile": "src/public-api.ts"
   },
-  "assets": ["README.md", "LICENSE.md"]
+  "assets": ["README.md", "LICENSE.md"],
+  "allowedNonPeerDependencies": ["@open-iframe-resizer/core"]
 }
