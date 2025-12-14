@@ -9,7 +9,7 @@ NEW_VERSION=$1
 CORE_PACKAGE_DIR="./packages/core"
 REACT_PACKAGE_DIR="./packages/react"
 VUE_PACKAGE_DIR="./packages/vue"
-ANGULAR_PACKAGE_DIR="./packages/angular"
+ANGULAR_PACKAGE_DIR="./packages/angular/projects/lib"
 
 safe_sed() {
   local search="$1"
