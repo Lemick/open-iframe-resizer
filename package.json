@@ -32,7 +32,8 @@
   "workspaces": [
     "packages/core",
     "packages/react",
-    "packages/vue"
+    "packages/vue",
+    "packages/angular"
   ],
   "version": "0.0.1"
 }
