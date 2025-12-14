@@ -48,6 +48,7 @@ echo "Updating vue package and its dependency version to $NEW_VERSION..."
 
 echo "Updating angular package and its dependency version to $NEW_VERSION..."
 (
+  npm --workspace=packages/angular pkg set "dependencies.@open-iframe-resizer/core=$NEW_VERSION"
   cd "$ANGULAR_PACKAGE_DIR" || exit
   npm pkg set "dependencies.@open-iframe-resizer/core=$NEW_VERSION"
   npm version "$NEW_VERSION" --no-git-tag-version
