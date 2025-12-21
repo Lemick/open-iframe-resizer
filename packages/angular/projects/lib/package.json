@@ -22,8 +22,8 @@
 		"react"
 	],
 	"peerDependencies": {
-		"@angular/common": "^19.2.0",
-		"@angular/core": "^19.2.0"
+		"@angular/common": ">=14.0.0 <20.0.0",
+		"@angular/core": ">=14.0.0 <20.0.0"
 	},
 	"dependencies": {
 		"@open-iframe-resizer/core": "2.2.0",
