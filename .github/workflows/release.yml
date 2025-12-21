@@ -30,10 +30,10 @@ jobs:
           echo "Publishing packages individually..."
 
           packages=(
-            "packages/root"
+            "packages/core"
             "packages/react"
             "packages/vue"
-            "packages/angular/projects/lib"
+            "packages/angular/dist/lib"
           )
 
           for pkg in "${packages[@]}"; do
