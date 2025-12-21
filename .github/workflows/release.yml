@@ -24,7 +24,25 @@ jobs:
       - name: Build workspace packages
         run: npm run build --workspaces
 
-      - name: Publish workspace packages
-        run: npm publish --workspaces --access public
+      - name: Publish packages
+        run: |
+          set -e
+          echo "Publishing packages individually..."
+
+          packages=(
+            "packages/core"
+            "packages/react"
+            "packages/vue"
+            "packages/angular/dist/lib"
+          )
+
+          for pkg in "${packages[@]}"; do
+            echo "Publishing $pkg..."
+            cd $pkg
+
+            npm publish --access public
+
+            cd - > /dev/null
+          done
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

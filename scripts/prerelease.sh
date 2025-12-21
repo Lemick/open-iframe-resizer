@@ -9,6 +9,7 @@ NEW_VERSION=$1
 CORE_PACKAGE_DIR="./packages/core"
 REACT_PACKAGE_DIR="./packages/react"
 VUE_PACKAGE_DIR="./packages/vue"
+ANGULAR_PACKAGE_DIR="./packages/angular/projects/lib"
 
 safe_sed() {
   local search="$1"
@@ -42,6 +43,14 @@ echo "Updating vue package and its dependency version to $NEW_VERSION..."
 (
   npm --workspace=packages/vue pkg set "dependencies.@open-iframe-resizer/core=$NEW_VERSION"
   cd "$VUE_PACKAGE_DIR" || exit
+  npm version "$NEW_VERSION" --no-git-tag-version
+)
+
+echo "Updating angular package and its dependency version to $NEW_VERSION..."
+(
+  npm --workspace=packages/angular pkg set "dependencies.@open-iframe-resizer/core=$NEW_VERSION"
+  cd "$ANGULAR_PACKAGE_DIR" || exit
+  npm pkg set "dependencies.@open-iframe-resizer/core=$NEW_VERSION"
   npm version "$NEW_VERSION" --no-git-tag-version
 )
 

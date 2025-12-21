@@ -1,0 +1,33 @@
+{
+	"name": "@open-iframe-resizer/angular",
+	"private": false,
+	"version": "2.2.0",
+	"description": "Open-source modern iframe resizer component",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Lemick/open-iframe-resizer.git"
+	},
+	"keywords": [
+		"iframe",
+		"Resizing",
+		"Resizer",
+		"resize",
+		"cross",
+		"same",
+		"domain",
+		"width",
+		"height",
+		"responsive",
+		"react"
+	],
+	"peerDependencies": {
+		"@angular/common": ">=14.0.0 <20.0.0",
+		"@angular/core": ">=14.0.0 <20.0.0"
+	},
+	"dependencies": {
+		"@open-iframe-resizer/core": "2.2.0",
+		"tslib": "^2.3.0"
+	},
+	"sideEffects": false
+}
