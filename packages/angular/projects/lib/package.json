@@ -19,7 +19,7 @@
 		"width",
 		"height",
 		"responsive",
-		"react"
+		"angular"
 	],
 	"peerDependencies": {
 		"@angular/common": ">=14.0.0 <20.0.0",
