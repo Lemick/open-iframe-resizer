@@ -17,7 +17,7 @@ If you found this project helpful, please consider starring the repository!
 ```html
 
 <script type="module">
-  import { initialize } from "https://cdn.jsdelivr.net/npm/@open-iframe-resizer/core@v2.2.0/dist/index.min.js";
+  import { initialize } from "https://cdn.jsdelivr.net/npm/@open-iframe-resizer/core@v2.3.0/dist/index.min.js";
 
   initialize({}, "#my-iframe");
 </script>
