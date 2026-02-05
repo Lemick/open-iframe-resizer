@@ -1,7 +1,7 @@
 {
 	"name": "@open-iframe-resizer/angular",
 	"private": false,
-	"version": "2.3.0",
+	"version": "2.3.1",
 	"description": "Open-source modern iframe resizer component",
 	"license": "MIT",
 	"repository": {
@@ -22,11 +22,11 @@
 		"angular"
 	],
 	"peerDependencies": {
-		"@angular/common": ">=14.0.0 <21.0.0",
-		"@angular/core": ">=14.0.0 <21.0.0"
+		"@angular/common": ">=14.0.0 <22.0.0",
+		"@angular/core": ">=14.0.0 <22.0.0"
 	},
 	"dependencies": {
-		"@open-iframe-resizer/core": "2.3.0",
+		"@open-iframe-resizer/core": "2.3.1",
 		"tslib": "^2.3.0"
 	},
 	"sideEffects": false
