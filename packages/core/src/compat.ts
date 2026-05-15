@@ -7,7 +7,11 @@ export function handleLegacyLibResizeMessage(event: MessageEvent): number | null
     return null;
   }
 
-  if (!event.data.endsWith("mutationObserver") && !event.data.endsWith("resizeObserver")) {
+  // newer versions also append the child's version number on the init event
+  if (
+    !(event.data.search(/:init(:[\d.]+)?$/g) >= 0) &&
+    !event.data.endsWith("mutationObserver") && !event.data.endsWith("resizeObserver")
+  ) {
     return null;
   }
 
