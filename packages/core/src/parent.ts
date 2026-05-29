@@ -144,10 +144,22 @@ function addCrossOriginChildResizeListener(registeredElement: RegisteredElement,
     initContext.retryTimeoutId = window.setTimeout(sendInitializationMessageToChild, getExponentialBackoffDelay(initContext.retryAttempts));
   };
 
+  const handleNavigation = () => {
+    if (initContext.isInitialized) {
+      initContext.isInitialized = false;
+      initContext.retryAttempts = 0;
+      sendInitializationMessageToChild();
+    }
+  };
+
+  iframe.addEventListener("load", handleNavigation);
   sendInitializationMessageToChild();
 
   return {
-    unsubscribe: () => window.removeEventListener("message", handleIframeResizedMessage),
+    unsubscribe: () => {
+      window.removeEventListener("message", handleIframeResizedMessage);
+      iframe.removeEventListener("load", handleNavigation);
+    },
     resize: () => {
       const message: IframeGetChildDimensionsEventData = { type: "iframe-get-child-dimensions" };
       iframe.contentWindow?.postMessage(message, "*");
