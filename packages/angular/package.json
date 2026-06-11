@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "serve": "ng serve demo --port 5000",
-    "serve:dist": "serve dist/demo/browser -l 5000",
+    "serve": "ng serve demo --port 5001",
+    "serve:dist": "serve dist/demo/browser -l 5001",
     "build": "npm run build:lib && npm run build:demo",
     "build:lib": "ng build lib --configuration production",
     "build:demo": "ng build demo --configuration production",
