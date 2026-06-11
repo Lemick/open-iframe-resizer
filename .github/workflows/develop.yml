@@ -28,22 +28,20 @@ jobs:
         run: npm run build
 
       - name: Run tests and code coverage
-        id: test
         run: npm run test
 
-  upload-reports:
-    if: failure() && needs.test.outputs.outcome == 'failure'
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        project:
-          - core
-          - react
-          - vue
-    steps:
-      - name: Upload Playwright Report
+      - name: Upload Playwright Reports
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.project }}-playwright-report
-          path: packages/${{ matrix.project }}/playwright-report/
+          name: playwright-reports
+          path: packages/*/playwright-report/
+          retention-days: 7
+
+      - name: Upload Playwright Test Results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: packages/*/test-results/
           retention-days: 7
