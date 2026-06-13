@@ -1,6 +1,6 @@
 import {
   applyStyleSettings,
-  deferWhenSameOriginIframeIsLoaded,
+  executeIfIframeIsLoaded,
   extractIframeOrigin,
   getBoundingRectSize,
   getDefaultSettings,
@@ -144,10 +144,23 @@ function addCrossOriginChildResizeListener(registeredElement: RegisteredElement,
     initContext.retryTimeoutId = window.setTimeout(sendInitializationMessageToChild, getExponentialBackoffDelay(initContext.retryAttempts));
   };
 
+  const handleLoadEvent = () => {
+    if (!initContext.isInitialized) {
+      return;
+    }
+    initContext.isInitialized = false;
+    initContext.retryAttempts = 0;
+    sendInitializationMessageToChild();
+  };
+
+  iframe.addEventListener("load", handleLoadEvent); // Restart initialization when the iframe had reload
   sendInitializationMessageToChild();
 
   return {
-    unsubscribe: () => window.removeEventListener("message", handleIframeResizedMessage),
+    unsubscribe: () => {
+      window.removeEventListener("message", handleIframeResizedMessage);
+      iframe.removeEventListener("load", handleLoadEvent);
+    },
     resize: () => {
       const message: IframeGetChildDimensionsEventData = { type: "iframe-get-child-dimensions" };
       iframe.contentWindow?.postMessage(message, "*");
@@ -172,7 +185,8 @@ function addSameOriginChildResizeListener(registeredElement: RegisteredElement) 
     getResizeObserverInstance().observe(elementToObserve);
   };
 
-  deferWhenSameOriginIframeIsLoaded(iframe, initialize);
+  executeIfIframeIsLoaded(iframe, initialize);
+  iframe.addEventListener("load", initialize); // Initialize when the iframe will load, and re-initialize when iframe encounter load events
 
   return {
     unsubscribe: () => {
@@ -181,7 +195,7 @@ function addSameOriginChildResizeListener(registeredElement: RegisteredElement) 
         getResizeObserverInstance().unobserve(elementToObserve);
       }
     },
-    resize: () => measureAndResizeIframe(registeredElement)
+    resize: () => measureAndResizeIframe(registeredElement),
   };
 }
 
@@ -227,7 +241,7 @@ function createResizerObserverLazyFactory() {
 }
 
 function measureAndResizeIframe(registeredElement: RegisteredElement) {
-  const  { iframe, settings } = registeredElement;
+  const { iframe, settings } = registeredElement;
   const observedElement = resolveElementToObserve(iframe.contentDocument, settings.targetElementSelector);
   if (!observedElement) {
     return;

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cross-origin Iframe Navigation</title>
+    <style>
+        body {
+            padding: 32px;
+        }
+
+        iframe {
+            border: 2px dotted red;
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+<h1>Cross-origin Iframe with Navigation</h1>
+<iframe id="myIframe" src="http://localhost:5551/usecases/23-cross-origin-with-navigation/iframe-content.html"></iframe>
+
+<script type="module">
+    import {initialize} from "/dist/index.js";
+
+    initialize({}, "#myIframe");
+</script>
+
+</body>
+</html>
