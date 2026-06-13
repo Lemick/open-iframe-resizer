@@ -153,7 +153,7 @@ function addCrossOriginChildResizeListener(registeredElement: RegisteredElement,
     sendInitializationMessageToChild();
   };
 
-  iframe.addEventListener("load", handleLoadEvent); // Restart initialization when the iframe had reload
+  iframe.addEventListener("load", handleLoadEvent); // Restart initialization when the iframe reload
   sendInitializationMessageToChild();
 
   return {
@@ -186,7 +186,7 @@ function addSameOriginChildResizeListener(registeredElement: RegisteredElement) 
   };
 
   executeIfIframeIsLoaded(iframe, initialize);
-  iframe.addEventListener("load", initialize); // Initialize when the iframe will load, and re-initialize when iframe encounter load events
+  iframe.addEventListener("load", initialize); // Initialize when the iframe load and re-initialize when iframe reload
 
   return {
     unsubscribe: () => {
