@@ -194,6 +194,7 @@ function addSameOriginChildResizeListener(registeredElement: RegisteredElement) 
       if (elementToObserve) {
         getResizeObserverInstance().unobserve(elementToObserve);
       }
+      iframe.removeEventListener("load", initialize);
     },
     resize: () => measureAndResizeIframe(registeredElement),
   };
