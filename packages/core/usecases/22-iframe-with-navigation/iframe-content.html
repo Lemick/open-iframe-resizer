@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navigation Example</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    
+    nav {
+      margin-bottom: 20px;
+      border-bottom: 2px solid #333;
+      padding-bottom: 10px;
+    }
+    
+    a {
+      margin-right: 15px;
+      cursor: pointer;
+      text-decoration: underline;
+      color: blue;
+    }
+    
+    .section {
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #ccc;
+    }
+    
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="./iframe-content.html">Real Navigation</a>
+  <a onclick="toggleSection('section3', event)">Dynamic Toggle (Section 3)</a>
+</nav>
+
+<div class="section">
+  <h1>Main Content</h1>
+  <p id="content">Initial content for main page</p>
+</div>
+
+<div id="section3" class="section hidden">
+  <h1>Section 3 (Dynamic)</h1>
+  <p id="content3">Initial content for section 3</p>
+</div>
+
+<script>
+  const lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ";
+  let currentIntervalId = null;
+  
+  function growContent(contentId) {
+    if (currentIntervalId) {
+      clearInterval(currentIntervalId);
+    }
+    
+    const content = document.getElementById(contentId);
+    if (!content) return;
+    
+    const additionalText = lorem.repeat(20);
+    
+    let times = 0;
+    currentIntervalId = setInterval(() => {
+      if (times < 3) {
+        content.innerHTML += additionalText;
+        times++;
+      } else {
+        clearInterval(currentIntervalId);
+      }
+    }, 200);
+  }
+  
+  function toggleSection(sectionId, event) {
+    event.preventDefault();
+    const section = document.getElementById(sectionId);
+    section.classList.toggle('hidden');
+    
+    if (!section.classList.contains('hidden')) {
+      growContent('content3');
+    }
+  }
+  
+  window.toggleSection = toggleSection;
+  
+  // Auto-grow content on load
+  window.addEventListener('load', () => {
+    growContent('content');
+  });
+</script>
+
+<script
+  src="/dist/index.umd.cjs"
+  type="text/javascript"
+></script>
+
+</body>
+</html>

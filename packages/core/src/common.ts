@@ -24,11 +24,13 @@ export const postMessageSafelyToCrossOriginIframe = (iframe: HTMLIFrameElement, 
   iframe.addEventListener("load", executable, { once: true });
 };
 
-export const deferWhenSameOriginIframeIsLoaded = (iframe: HTMLIFrameElement, executable: () => void) => {
+export const executeIfIframeIsLoaded = (iframe: HTMLIFrameElement, executable: () => void) => {
   const isLoadingCompleted = iframe.contentWindow?.document.readyState === "complete";
   const isNotBlankPage = iframe.src !== "about:blank" && iframe.contentWindow?.location.href !== "about:blank"; // Chrome browsers load once with an empty location
 
-  return isNotBlankPage && isLoadingCompleted ? executable() : iframe.addEventListener("load", executable, { once: true });
+  if (isNotBlankPage && isLoadingCompleted) {
+    executable();
+  }
 };
 
 export const getDefaultSettings: () => Settings = () => ({ offsetSize: 0, checkOrigin: true, enableLegacyLibSupport: false });

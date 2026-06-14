@@ -64,7 +64,8 @@ OLD_VERSION="${OLD_VERSION#v}"
 
 safe_sed "@v${OLD_VERSION}" "@v${NEW_VERSION}" "README.md"
 
-mapfile -t mdx_files < <(find website -type f -name "*.mdx")
-safe_sed "@v${OLD_VERSION}" "@v${NEW_VERSION}" "${mdx_files[@]}"
+while IFS= read -r mdx_file; do
+  safe_sed "@v${OLD_VERSION}" "@v${NEW_VERSION}" "$mdx_file"
+done < <(find website -type f -name "*.mdx")
 
 echo "Updated version references in markdown files"
