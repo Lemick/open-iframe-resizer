@@ -5,9 +5,13 @@ export const commonConfig = {
   integrations: [
     starlight({
       title: "Open Iframe Resizer",
-      social: {
-        github: "https://github.com/Lemick/open-iframe-resizer",
-      },
+      social: [
+        {
+          icon: "github",
+          label: "GitHub",
+          href: "https://github.com/Lemick/open-iframe-resizer",
+        },
+      ],
       head: [
         { tag: "script", attrs: { src: "//gc.zgo.at/count.js", defer: "true", "data-goatcounter": "https://open-iframe-resizer.goatcounter.com/count" } },
         { tag: "meta", attrs: { name: "google-site-verification", content: "8FoOLQ6IEjarQF4kcRiSxY07aDfoVvATd4pLIe0fIS0" } },
@@ -24,7 +28,7 @@ export const commonConfig = {
         },
         {
           label: "Reference",
-          autogenerate: { directory: "reference" },
+          items: [{ autogenerate: { directory: "reference" } }],
         },
       ],
     }),
