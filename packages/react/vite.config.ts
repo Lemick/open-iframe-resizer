@@ -16,7 +16,6 @@ export default defineConfig((env) => ({
     }),
   ],
   build: {
-    minify: "esbuild",
     sourcemap: env.command === "serve",
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
@@ -24,7 +23,7 @@ export default defineConfig((env) => ({
       formats: ["es", "umd"],
       fileName: (format) => `${formattedName}.${format}.js`,
     },
-    rollupOptions: {
+    rolldownOptions: {
       external: ["react", "react/jsx-runtime", "react-dom"],
       output: {
         globals: {

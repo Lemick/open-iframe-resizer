@@ -21,7 +21,7 @@ export default defineConfig({
       formats: ["es", "umd"],
       fileName: (format) => `${formattedName}.${format}.js`,
     },
-    rollupOptions: {
+    rolldownOptions: {
       external: ["vue"],
       output: {
         globals: {
