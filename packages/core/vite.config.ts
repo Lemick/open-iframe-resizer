@@ -22,7 +22,6 @@ export default defineConfig((env) => ({
     ],
   },
   build: {
-    minify: "esbuild",
     sourcemap: env.command === "serve",
     reportCompressedSize: true,
     lib: {
