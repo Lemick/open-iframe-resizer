@@ -12,7 +12,7 @@
   "devDependencies": {
     "@biomejs/biome": "^2.3.13",
     "@microsoft/tsdoc": "^0.16.0",
-    "@playwright/test": "^1.61.1",
+    "@playwright/test": "^1.62.1",
     "@types/node": "^25.2.0",
     "@vitest/coverage-v8": "^4.1.10",
     "@vitest/ui": "^4.1.10",
