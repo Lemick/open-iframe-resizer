@@ -52,6 +52,15 @@ echo "Updating angular package and its dependency version to $NEW_VERSION..."
   cd "$ANGULAR_PACKAGE_DIR" || exit
   npm pkg set "dependencies.@open-iframe-resizer/core=$NEW_VERSION"
   npm version "$NEW_VERSION" --no-git-tag-version
+
+  # The new core version is not published yet, so generate the lockfile from
+  # the local package and keep the publishable semver in the package metadata.
+  npm install ../../../core --package-lock-only --ignore-scripts --no-audit --no-fund
+  npm pkg set "dependencies.@open-iframe-resizer/core=$NEW_VERSION"
+  safe_sed \
+    '"@open-iframe-resizer/core": "file:../../../core"' \
+    "\"@open-iframe-resizer/core\": \"$NEW_VERSION\"" \
+    "package-lock.json"
 )
 
 npm install
@@ -62,7 +71,11 @@ git fetch --tags
 OLD_VERSION=$(git describe --tags "$(git rev-list --tags --max-count=1)")
 OLD_VERSION="${OLD_VERSION#v}"
 
-safe_sed "@v${OLD_VERSION}" "@v${NEW_VERSION}" "README.md"
+safe_sed \
+  "@v${OLD_VERSION}" \
+  "@v${NEW_VERSION}" \
+  "README.md" \
+  "$CORE_PACKAGE_DIR/README.md"
 
 while IFS= read -r mdx_file; do
   safe_sed "@v${OLD_VERSION}" "@v${NEW_VERSION}" "$mdx_file"
