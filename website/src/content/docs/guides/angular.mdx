@@ -1,0 +1,85 @@
+---
+title: Angular Setup
+description: Set up automatic iframe resizing with the Angular directive
+---
+
+Use the standalone `IframeResizerDirective` to automatically resize an iframe when its content changes.
+The Angular package supports **Angular 21 and 22** (`>=21.0.0 <23.0.0`).
+
+### Install the package
+
+```bash
+npm install @open-iframe-resizer/angular
+```
+
+### Import the directive
+
+Add `IframeResizerDirective` to your component's `imports`, then apply `oirIframeResizer` to the iframe:
+
+```ts
+import { Component } from "@angular/core";
+import { IframeResizerDirective } from "@open-iframe-resizer/angular";
+
+@Component({
+  selector: "app-embedded-content",
+  standalone: true,
+  imports: [IframeResizerDirective],
+  template: `
+    <iframe
+      oirIframeResizer
+      src="/iframe-content.html"
+      title="Embedded content"
+      width="100%"
+      style="border: 0"
+    ></iframe>
+  `,
+})
+export class EmbeddedContentComponent {}
+```
+
+Replace `/iframe-content.html` with the page you want to embed. The directive initializes resizing after the view is ready
+and removes its listeners when Angular destroys it, including when the iframe is removed with `@if`.
+You do not need to call `initialize()` or handle cleanup yourself.
+
+For an application using NgModules, add the standalone directive to the module's `imports` array.
+
+### Configure resizing
+
+Pass options using Angular property bindings:
+
+```html
+<iframe
+  oirIframeResizer
+  src="/iframe-content.html"
+  title="Embedded content"
+  width="100%"
+  style="border: 0"
+  [offsetSize]="8"
+  [bodyMargin]="'0'"
+  [bodyPadding]="'16px'"
+></iframe>
+```
+
+| Input | Purpose |
+| --- | --- |
+| `offsetSize` | Add an offset to the calculated height, in pixels. |
+| `bodyMargin`, `bodyPadding` | Set the embedded page's body margin and padding. |
+| `targetElementSelector` | Observe a specific element in the embedded page. |
+| `checkOrigin` | Enable or disable incoming message origin checks; enabled by default. |
+| `enableLegacyLibSupport` | Communicate with a child page using the legacy `iframe-resizer` script. |
+| `onBeforeIframeResize` | Pass a callback that can return `false` to cancel resizing. |
+| `onIframeResize` | Pass a callback to run after resizing. |
+
+The callback inputs are functions passed with property bindings, such as `[onIframeResize]="handleResize"`.
+Use an arrow function on your component if the callback needs access to component state.
+Configure inputs before the directive initializes; changing them later does not reinitialize resizing.
+
+See the <a href={`${import.meta.env.BASE_URL}reference/api`}>API reference</a> for option details and callback context types.
+
+### Cross-origin iframes
+
+:::caution
+If the embedded page is on another origin, it must also load the child script. The Angular directive alone cannot resize
+a cross-origin page that does not cooperate. Follow the <a href={`${import.meta.env.BASE_URL}guides/cross-origin`}>cross-origin setup guide</a>
+to configure the child page.
+:::

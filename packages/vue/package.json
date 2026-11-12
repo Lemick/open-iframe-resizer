@@ -1,7 +1,7 @@
 {
   "name": "@open-iframe-resizer/vue",
   "private": false,
-  "version": "2.4.1",
+  "version": "3.0.0",
   "description": "Open-source modern iframe resizer component",
   "license": "MIT",
   "repository": {
@@ -43,13 +43,13 @@
     "test": "npx playwright install --with-deps && npx playwright test"
   },
   "dependencies": {
-    "@open-iframe-resizer/core": "2.4.1"
+    "@open-iframe-resizer/core": "3.0.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.7",
-    "@vue/tsconfig": "^0.8.1",
-    "vue": "^3.5.27",
-    "vue-tsc": "^3.2.4"
+    "@vitejs/plugin-vue": "^6.0.10",
+    "@vue/tsconfig": "^0.9.1",
+    "vue": "^3.5.45",
+    "vue-tsc": "^3.3.14"
   },
   "peerDependencies": {
     "vue": ">=3.0.0"

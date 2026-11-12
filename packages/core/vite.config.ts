@@ -9,7 +9,7 @@ export default defineConfig((env) => ({
     dts({
       entryRoot: "src",
       copyDtsFiles: true,
-      rollupTypes: true,
+      bundleTypes: true,
       tsconfigPath: path.join(__dirname, "tsconfig.json"),
     }),
   ],
