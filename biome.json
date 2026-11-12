@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.1.2/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.6.7/schema.json",
   "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "formatter": {
     "indentStyle": "space",
@@ -9,7 +9,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "suspicious": {
         "noConsole": { "level": "error", "options": { "allow": ["log"] } }
       },

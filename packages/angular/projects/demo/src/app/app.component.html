@@ -1,12 +1,13 @@
 <h1>Demo App</h1>
 
 <div class="controls">
-  <button (click)="toggleIframe()">
+  <button type="button" (click)="toggleIframe()">
     {{ iframeMounted ? 'Unmount iframe' : 'Mount iframe' }}
   </button>
 </div>
 
 <iframe
+  title="Resizable iframe demo"
   *ngIf="iframeMounted"
   oirIframeResizer
   src="/iframe-content.html"

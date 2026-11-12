@@ -12,7 +12,7 @@ export default defineConfig((env) => ({
     react(),
     dts({
       insertTypesEntry: true,
-      rollupTypes: true,
+      bundleTypes: true,
     }),
   ],
   build: {

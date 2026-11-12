@@ -17,7 +17,7 @@ If you found this project helpful, please consider starring the repository!
 ```html
 
 <script type="module">
-  import { initialize } from "https://cdn.jsdelivr.net/npm/@open-iframe-resizer/core@v2.4.1/dist/index.min.js";
+  import { initialize } from "https://cdn.jsdelivr.net/npm/@open-iframe-resizer/core@v3.0.0/dist/index.min.js";
 
   initialize({}, "#my-iframe");
 </script>
@@ -46,6 +46,8 @@ npm install @open-iframe-resizer/vue
 ```
 
 ### Angular
+
+Supports Angular 21 and 22 (`>=21.0.0 <23.0.0`).
 
 ```bash
 npm install @open-iframe-resizer/angular
